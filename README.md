@@ -1,1 +1,2 @@
-# 2026-HOMEWORK-633054-629697
+# diadia
+Lo Studio di Caso a Supporto del Corso di Programmazione Orientata agli Oggetti
