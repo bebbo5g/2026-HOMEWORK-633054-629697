@@ -1,6 +1,4 @@
-
-
-
+import java.util.Arrays;
 
 /**
  * Classe Stanza - una stanza in un gioco di ruolo.
@@ -120,15 +118,28 @@ public class Stanza {
 	* @return la rappresentazione stringa
 	*/
     public String toString() {
+    	
     	StringBuilder risultato = new StringBuilder();
+    	//System.out.println(this.nome);
+    	//System.out.println(Arrays.toString(this.direzioni));
+    	//System.out.println(Arrays.toString(this.attrezzi));
     	risultato.append(this.nome);
+    	
+    	
     	risultato.append("\nUscite: ");
+    	
     	for (String direzione : this.direzioni)
     		if (direzione!=null)
     			risultato.append(" " + direzione);
+    	
     	risultato.append("\nAttrezzi nella stanza: ");
+    	
     	for (Attrezzo attrezzo : this.attrezzi) {
-    		risultato.append(attrezzo.toString()+" ");
+    		if(attrezzo != null)
+    		{
+    			risultato.append(attrezzo.toString()+" ");
+    		}
+    		
     	}
     	return risultato.toString();
     }

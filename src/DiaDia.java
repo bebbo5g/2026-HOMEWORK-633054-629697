@@ -35,14 +35,18 @@ public class DiaDia {
 	}
 
 	public void gioca() {
+		
 		String istruzione; 
 		Scanner scannerDiLinee;
 
 		System.out.println(MESSAGGIO_BENVENUTO);
-		scannerDiLinee = new Scanner(System.in);		
+		
+		scannerDiLinee = new Scanner(System.in);
+		
 		do		
 			istruzione = scannerDiLinee.nextLine();
 		while (!processaIstruzione(istruzione));
+			
 		
 		scannerDiLinee.close();
 	}   
@@ -66,6 +70,8 @@ public class DiaDia {
 			
 		}else
 			System.out.println("Comando sconosciuto");
+		
+		
 		if (this.partita.vinta()) {
 			System.out.println("Hai vinto!");
 			return true;
@@ -91,6 +97,7 @@ public class DiaDia {
 	private void vai(String direzione) {
 		if(direzione==null)
 			System.out.println("Dove vuoi andare ?");
+		
 		Stanza prossimaStanza = null;
 		prossimaStanza = this.partita.getStanzaCorrente().getStanzaAdiacente(direzione);
 		if (prossimaStanza == null)
