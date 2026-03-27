@@ -1,4 +1,3 @@
-import java.util.Arrays;
 
 /**
  * Classe Stanza - una stanza in un gioco di ruolo.
@@ -26,6 +25,7 @@ public class Stanza {
     
 	private String[] direzioni;
     
+	private Borsa borsa;
     /**
      * Crea una stanza. Non ci sono stanze adiacenti, non ci sono attrezzi.
      * @param nome il nome della stanza
@@ -149,13 +149,14 @@ public class Stanza {
 	* @return true se l'attrezzo esiste nella stanza, false altrimenti.
 	*/
 	public boolean hasAttrezzo(String nomeAttrezzo) {
-		boolean trovato;
-		trovato = false;
-		for (Attrezzo attrezzo : this.attrezzi) {
-			if (attrezzo.getNome().equals(nomeAttrezzo))
-				trovato = true;
+		
+		for(int i = 0; i < this.numeroAttrezzi; i++)
+		{
+			if(this.attrezzi[i] != null && this.attrezzi[i].getNome().equals(nomeAttrezzo))
+				return true;
 		}
-		return trovato;
+		
+		return false;
 	}
 
 	/**
@@ -165,13 +166,16 @@ public class Stanza {
      * 		   null se l'attrezzo non e' presente.
 	 */
 	public Attrezzo getAttrezzo(String nomeAttrezzo) {
-		Attrezzo attrezzoCercato;
-		attrezzoCercato = null;
-		for (Attrezzo attrezzo : this.attrezzi) {
-			if (attrezzo.getNome().equals(nomeAttrezzo))
-				attrezzoCercato = attrezzo;
-		}
-		return attrezzoCercato;	
+		
+		for (int i = 0; i < this.numeroAttrezzi; i++) {
+	        if (this.attrezzi[i] != null && this.attrezzi[i].getNome().equals(nomeAttrezzo)) {
+
+	            return this.attrezzi[i];
+	        }
+	    }
+
+	    return null;
+		
 	}
 
 	/**
@@ -179,8 +183,24 @@ public class Stanza {
 	 * @param nomeAttrezzo
 	 * @return true se l'attrezzo e' stato rimosso, false altrimenti
 	 */
-	public boolean removeAttrezzo(Attrezzo attrezzo) {
-		// TODO da implementare
+	public boolean removeAttrezzo(String nomeAttrezzo) {
+		
+		for(int i = 0; i < this.numeroAttrezzi; i++)
+		{
+			if(this.attrezzi[i] != null && this.attrezzi[i].getNome().equals(nomeAttrezzo))
+			{
+				for(int j = i; j < this.numeroAttrezzi-1; j++)
+				{
+					this.attrezzi[j] = this.attrezzi[j + 1];
+				}
+				
+				this.attrezzi[this.numeroAttrezzi - 1] = null;
+				this.numeroAttrezzi--;
+				
+				return true;
+			}
+		}
+			
 		return false;
 	}
 

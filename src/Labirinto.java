@@ -45,7 +45,6 @@ public class Labirinto {
 	}
 	
 	
-	
 	public Stanza getStanzaFinale()
 	{
 		return this.finale;

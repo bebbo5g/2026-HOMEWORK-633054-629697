@@ -26,16 +26,19 @@ public class DiaDia {
 			"o regalarli se pensi che possano ingraziarti qualcuno.\n\n"+
 			"Per conoscere le istruzioni usa il comando 'aiuto'.";
 	
-	static final private String[] elencoComandi = {"vai", "aiuto", "fine"};
+	static final private String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa"};
 	static final private int CFU_INIZIALI = 20;
 
 
 	private Partita partita;
 	private Giocatore giocatore;
+	private Borsa borsa;
 
 	public DiaDia() {
+		
 		this.partita = new Partita();
-		this.giocatore = new Giocatore(CFU_INIZIALI);
+		this.borsa = new Borsa();
+		this.giocatore = new Giocatore(CFU_INIZIALI, borsa);
 	}
 
 	public void gioca() {
@@ -71,7 +74,10 @@ public class DiaDia {
 			this.vai(comandoDaEseguire.getParametro());
 		}else if (comandoDaEseguire.getNome().equals("aiuto")) {
 			this.aiuto();
-			
+		}else if(comandoDaEseguire.getNome().equals("prendi")) {
+			this.prendi(comandoDaEseguire.getParametro());
+		}else if(comandoDaEseguire.getNome().equals("posa")) {
+			this.posa(comandoDaEseguire.getParametro());
 		}else
 			System.out.println("Comando sconosciuto");
 		
@@ -113,10 +119,83 @@ public class DiaDia {
 			
 			if (this.giocatore.getCfu() <= 0) {
 		           System.out.println("Hai esaurito i CFU! Game Over!");
+		           System.out.println("cfu rimasti: " + giocatore.getCfu());
 		           System.exit(0); // o gestire in modo più elegante
 		       }
 		}
 		System.out.println(partita.getStanzaCorrente().getDescrizione());
+	}
+	
+	
+	
+	private void prendi(String nomeAttrezzo)
+	{
+		if(nomeAttrezzo == null || nomeAttrezzo.isEmpty()) {
+			System.out.println("Nessun attrezzo presente da prendete! ");
+			
+		}else{
+			
+			Stanza stanzaCorr = partita.getStanzaCorrente();
+			Attrezzo attrezzoStanza = stanzaCorr.getAttrezzo(nomeAttrezzo);
+			
+			if(attrezzoStanza == null)
+			{
+				System.out.println("Nella stanza non c'è l'attrezzo: " + nomeAttrezzo);
+				return;
+			}
+			
+			boolean rimosso = giocatore.addAttrezzo(attrezzoStanza);
+			
+			if(rimosso == true)
+			{
+				stanzaCorr.removeAttrezzo(nomeAttrezzo);
+				
+				System.out.println("Attrezzo '" + attrezzoStanza.getNome() + "' preso e inserito nella borsa!");
+				System.out.println("Peso attuale borsa: " + giocatore.getBorsa().getPeso() + "kg/" + giocatore.getBorsa().getPesoMax() + "kg");
+			}
+			else
+			{
+				System.out.println("Borsa piena o troppo pesante! Non puoi prendere '" + attrezzoStanza.getNome() + "'");
+			}
+			
+			
+				
+		}
+		
+		
+	}
+	
+	private void posa(String nomeAttrezzo)
+	{
+		if(nomeAttrezzo == null || nomeAttrezzo.isEmpty())
+		{
+			System.out.println("Nessun attrazzo da posare! ");
+		}
+		else
+		{
+			Stanza stanzaCorrente = partita.getStanzaCorrente();
+			Attrezzo attrezzo = borsa.getAttrezzo(nomeAttrezzo);
+			
+			if(attrezzo == null)
+			{
+				System.out.println("Nella borsa non abbiamo l'attrezzo: " + nomeAttrezzo);
+				return;
+			}
+			
+			boolean aggiunto = stanzaCorrente.addAttrezzo(attrezzo);
+			
+			if(aggiunto)
+			{
+				borsa.removeAttrezzo(attrezzo);
+				
+				System.out.println("Attrezzo '" + attrezzo.getNome() + "' posato in stanza: "+ stanzaCorrente.getNome());
+				System.out.println("Peso attuale borsa: " + giocatore.getBorsa().getPeso() + "kg/" + giocatore.getBorsa().getPesoMax() + "kg");
+			}
+			else
+			{
+				System.out.println("Stanza piena din attrezzi impossibile posare: "+ attrezzo.getNome());
+			}
+		}
 	}
 
 	/**

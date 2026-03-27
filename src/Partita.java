@@ -12,18 +12,14 @@
 
 public class Partita {
 
-	//static final private int CFU_INIZIALI = 20;
-
 	private Stanza stanzaCorrente;
 	private boolean finita;
-	//private int cfu;
 	final private Labirinto labirinto;
 	private Giocatore giocatore; 
 	
 	public Partita(){
 		this.labirinto = new Labirinto();
 		this.finita = false;
-		//this.giocatore = new Giocatore(CFU_INIZIALI);
 		this.stanzaCorrente = labirinto.getStanzaIniziale();
 	}
 
@@ -62,12 +58,4 @@ public class Partita {
 	public void setFinita() {
 		this.finita = true;
 	}
-
-	/*public int getCfu() {
-		return this.cfu;
-	}
-
-	public void setCfu(int cfu) {
-		this.cfu = cfu;		
-	}*/
 }
