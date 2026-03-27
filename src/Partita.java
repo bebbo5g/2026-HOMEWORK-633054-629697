@@ -12,28 +12,20 @@
 
 public class Partita {
 
-	static final private int CFU_INIZIALI = 20;
+	//static final private int CFU_INIZIALI = 20;
 
 	private Stanza stanzaCorrente;
-	//private Stanza stanzaVincente;
 	private boolean finita;
-	private int cfu;
-	private Labirinto labirinto;
+	//private int cfu;
+	final private Labirinto labirinto;
+	private Giocatore giocatore; 
 	
 	public Partita(){
 		this.labirinto = new Labirinto();
-		//creaStanze();
 		this.finita = false;
-		this.cfu = CFU_INIZIALI;
+		//this.giocatore = new Giocatore(CFU_INIZIALI);
 		this.stanzaCorrente = labirinto.getStanzaIniziale();
 	}
-
-    /**
-     * Crea tutte le stanze e le porte di collegamento
-     */
-    //private void creaStanze() {
-
-		
 
 	public Stanza getStanzaVincente() {
 		return this.labirinto.getStanzaFinale();
@@ -60,7 +52,7 @@ public class Partita {
 	 * @return vero se partita finita
 	 */
 	public boolean isFinita() {
-		return finita || vinta() || (cfu == 0);
+		return finita || vinta() || (giocatore.getCfu() == 0);
 	}
 
 	/**
@@ -71,11 +63,11 @@ public class Partita {
 		this.finita = true;
 	}
 
-	public int getCfu() {
+	/*public int getCfu() {
 		return this.cfu;
 	}
 
 	public void setCfu(int cfu) {
 		this.cfu = cfu;		
-	}	
+	}*/
 }

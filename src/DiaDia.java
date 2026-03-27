@@ -27,11 +27,15 @@ public class DiaDia {
 			"Per conoscere le istruzioni usa il comando 'aiuto'.";
 	
 	static final private String[] elencoComandi = {"vai", "aiuto", "fine"};
+	static final private int CFU_INIZIALI = 20;
+
 
 	private Partita partita;
+	private Giocatore giocatore;
 
 	public DiaDia() {
 		this.partita = new Partita();
+		this.giocatore = new Giocatore(CFU_INIZIALI);
 	}
 
 	public void gioca() {
@@ -104,10 +108,10 @@ public class DiaDia {
 			System.out.println("Direzione inesistente");
 		else {
 			this.partita.setStanzaCorrente(prossimaStanza);
-			int cfu = this.partita.getCfu();
-			this.partita.setCfu(cfu - 1);
+			int cfu = this.giocatore.getCfu();
+			this.giocatore.setCfu(cfu-1);
 			
-			if (this.partita.getCfu() <= 0) {
+			if (this.giocatore.getCfu() <= 0) {
 		           System.out.println("Hai esaurito i CFU! Game Over!");
 		           System.exit(0); // o gestire in modo più elegante
 		       }
@@ -120,6 +124,7 @@ public class DiaDia {
 	 */
 	private void fine() {
 		System.out.println("Grazie di aver giocato!");// si desidera smettere
+		System.out.println("cfu rimasti: " + giocatore.getCfu());
 		System.exit(0);
 	}
 
