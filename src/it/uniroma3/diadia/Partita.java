@@ -12,11 +12,11 @@ import it.uniroma3.diadia.giocatore.Giocatore;
  */
 
 public class Partita {
-
+		
 	private Stanza stanzaCorrente;
 	private boolean finita;
 	final private Labirinto labirinto;
-	private Giocatore giocatore; 
+	private Giocatore giocatore;
 	
 	public Partita(){
 		this.labirinto = new Labirinto();
@@ -41,7 +41,7 @@ public class Partita {
 	 * @return vero se partita vinta
 	 */
 	public boolean vinta() {
-		return this.getStanzaCorrente()== this.getStanzaVincente();
+		return this.getStanzaCorrente() == this.getStanzaVincente();
 	}
 
 	/**
@@ -49,7 +49,7 @@ public class Partita {
 	 * @return vero se partita finita
 	 */
 	public boolean isFinita() {
-		return finita || vinta() || (giocatore.getCfu() == 0);
+		return (this.finita || vinta() || (giocatore.getCfu() == 0));
 	}
 
 	/**

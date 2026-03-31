@@ -33,7 +33,7 @@ public class DiaDia {
 			"Per conoscere le istruzioni usa il comando 'aiuto'.";
 	
 	static final private String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa"};
-	static final private int CFU_INIZIALI = 20;
+	static final private int CFU_INIZIALI = 4;
 
 
 	private Partita partita;

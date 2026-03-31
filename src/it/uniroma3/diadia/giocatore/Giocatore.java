@@ -12,6 +12,11 @@ public class Giocatore {
 		this.borsa = borsa;
 	}
 	
+	public Giocatore()
+	{
+		
+	}
+	
 	public void setCfu(int cfu)
 	{
 		this.cfu = cfu;
