@@ -1,12 +1,9 @@
 package it.uniroma3.diadia;
 
-
 import java.util.Scanner;
+import it.uniroma3.diadia.ambienti.*;
+import it.uniroma3.diadia.attrezzi.*;
 
-import it.uniroma3.diadia.ambienti.Stanza;
-import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.giocatore.Borsa;
-import it.uniroma3.diadia.giocatore.Giocatore;
 
 /**
  * Classe principale di diadia, un semplice gioco di ruolo ambientato al dia.
@@ -33,18 +30,11 @@ public class DiaDia {
 			"Per conoscere le istruzioni usa il comando 'aiuto'.";
 	
 	static final private String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa"};
-	static final private int CFU_INIZIALI = 4;
-
-
+	
 	private Partita partita;
-	private Giocatore giocatore;
-	private Borsa borsa;
 
 	public DiaDia() {
-		
 		this.partita = new Partita();
-		this.borsa = new Borsa();
-		this.giocatore = new Giocatore(CFU_INIZIALI, borsa);
 	}
 
 	public void gioca() {
@@ -84,15 +74,20 @@ public class DiaDia {
 			this.prendi(comandoDaEseguire.getParametro());
 		}else if(comandoDaEseguire.getNome().equals("posa")) {
 			this.posa(comandoDaEseguire.getParametro());
-		}else
+		}else {
 			System.out.println("Comando sconosciuto");
-		
-		
+		}
 		if (this.partita.vinta()) {
 			System.out.println("Hai vinto!");
 			return true;
-		} else
+		}else if(this.partita.isFinita() && this.partita.giocatore.getCfu() == 0){
+			System.out.println("Hai perso! CFU esuariti");
+			return true;
+		}else
 			return false;
+		
+		
+		
 	}   
 
 	// implementazioni dei comandi dell'utente:
@@ -115,21 +110,17 @@ public class DiaDia {
 			System.out.println("Dove vuoi andare ?");
 		
 		Stanza prossimaStanza = null;
-		prossimaStanza = this.partita.getStanzaCorrente().getStanzaAdiacente(direzione);
+		prossimaStanza = this.partita.labirinto.getStanzaCorrente().getStanzaAdiacente(direzione);
 		if (prossimaStanza == null)
 			System.out.println("Direzione inesistente");
 		else {
-			this.partita.setStanzaCorrente(prossimaStanza);
-			int cfu = this.giocatore.getCfu();
-			this.giocatore.setCfu(cfu-1);
+			this.partita.labirinto.setStanzaCorrente(prossimaStanza);
+			int cfu = this.partita.giocatore.getCfu();
+			this.partita.giocatore.setCfu(cfu - 1);
 			
-			if (this.giocatore.getCfu() <= 0) {
-		           System.out.println("Hai esaurito i CFU! Game Over!");
-		           System.out.println("cfu rimasti: " + giocatore.getCfu());
-		           System.exit(0); // o gestire in modo più elegante
-		       }
+			System.out.println("CFU rimantente: " + this.partita.giocatore.getCfu());
 		}
-		System.out.println(partita.getStanzaCorrente().getDescrizione());
+		System.out.println(partita.labirinto.getStanzaCorrente().getDescrizione());
 	}
 	
 	
@@ -137,11 +128,11 @@ public class DiaDia {
 	private void prendi(String nomeAttrezzo)
 	{
 		if(nomeAttrezzo == null || nomeAttrezzo.isEmpty()) {
-			System.out.println("Nessun attrezzo presente da prendete! ");
+			System.out.println("Non hai scritto niente! ");
 			
 		}else{
 			
-			Stanza stanzaCorr = partita.getStanzaCorrente();
+			Stanza stanzaCorr = this.partita.labirinto.getStanzaCorrente();
 			Attrezzo attrezzoStanza = stanzaCorr.getAttrezzo(nomeAttrezzo);
 			
 			if(attrezzoStanza == null)
@@ -150,14 +141,14 @@ public class DiaDia {
 				return;
 			}
 			
-			boolean rimosso = giocatore.addAttrezzo(attrezzoStanza);
+			boolean rimosso = this.partita.giocatore.borsa.addAttrezzo(attrezzoStanza);
 			
 			if(rimosso == true)
 			{
 				stanzaCorr.removeAttrezzo(nomeAttrezzo);
 				
 				System.out.println("Attrezzo '" + attrezzoStanza.getNome() + "' preso e inserito nella borsa!");
-				System.out.println("Peso attuale borsa: " + giocatore.getBorsa().getPeso() + "kg/" + giocatore.getBorsa().getPesoMax() + "kg");
+				System.out.println("Peso attuale borsa: " + this.partita.giocatore.borsa.getPeso()+ "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
 			}
 			else
 			{
@@ -179,8 +170,8 @@ public class DiaDia {
 		}
 		else
 		{
-			Stanza stanzaCorrente = partita.getStanzaCorrente();
-			Attrezzo attrezzo = borsa.getAttrezzo(nomeAttrezzo);
+			Stanza stanzaCorrente = this.partita.labirinto.getStanzaCorrente();
+			Attrezzo attrezzo = this.partita.giocatore.borsa.getAttrezzo(nomeAttrezzo);
 			
 			if(attrezzo == null)
 			{
@@ -192,10 +183,10 @@ public class DiaDia {
 			
 			if(aggiunto)
 			{
-				borsa.removeAttrezzo(attrezzo);
+				this.partita.giocatore.borsa.removeAttrezzo(attrezzo);
 				
 				System.out.println("Attrezzo '" + attrezzo.getNome() + "' posato in stanza: "+ stanzaCorrente.getNome());
-				System.out.println("Peso attuale borsa: " + giocatore.getBorsa().getPeso() + "kg/" + giocatore.getBorsa().getPesoMax() + "kg");
+				System.out.println("Peso attuale borsa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
 			}
 			else
 			{
@@ -209,8 +200,9 @@ public class DiaDia {
 	 */
 	private void fine() {
 		System.out.println("Grazie di aver giocato!");// si desidera smettere
-		System.out.println("cfu rimasti: " + giocatore.getCfu());
-		System.exit(0);
+		System.out.println("cfu rimasti: " + this.partita.giocatore.getCfu());
+		this.partita.isFinita();
+		return;
 	}
 
 	public static void main(String[] argc) {
