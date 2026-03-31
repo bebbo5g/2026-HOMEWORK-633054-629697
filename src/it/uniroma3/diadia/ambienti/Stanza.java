@@ -1,3 +1,5 @@
+package it.uniroma3.diadia.ambienti;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 /**
  * Classe Stanza - una stanza in un gioco di ruolo.
@@ -25,7 +27,6 @@ public class Stanza {
     
 	private String[] direzioni;
     
-	private Borsa borsa;
     /**
      * Crea una stanza. Non ci sono stanze adiacenti, non ci sono attrezzi.
      * @param nome il nome della stanza
