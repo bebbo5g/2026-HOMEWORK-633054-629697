@@ -14,15 +14,11 @@ import it.uniroma3.diadia.giocatore.Borsa;
  */
 
 public class Partita {
-	
-	
-		
 	//private Stanza stanzaCorrente;
 	
 	private boolean finita;
 	
 	Labirinto labirinto;
-	
 	Giocatore giocatore;
 	Borsa borsa;
 	

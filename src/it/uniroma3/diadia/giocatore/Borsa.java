@@ -5,7 +5,7 @@ public class Borsa {
 	
 	public final static int DEFAULT_PESO_MAX_BORSA = 10;
 	private Attrezzo[] attrezzi;
-	private int numeroAttrezzi;
+	public int numeroAttrezzi;
 	private int pesoMax;
 	
 	public Borsa() {
@@ -65,6 +65,11 @@ public class Borsa {
 	public boolean isEmpty() {
 		return this.numeroAttrezzi == 0;
 	}
+	
+	public boolean isPiena()
+	{
+		return this.numeroAttrezzi == 10;
+	}
 		
 	
 	public boolean hasAttrezzo(String nomeAttrezzo) {
@@ -82,9 +87,7 @@ public class Borsa {
 				a = this.attrezzi[i];
 				
 				for(int j = i; j < this.numeroAttrezzi - 1; j++)
-				{
 					this.attrezzi[j] = this.attrezzi[j +1];
-				}
 				
 				this.attrezzi[this.numeroAttrezzi -1 ] = null;
 				this.numeroAttrezzi--;

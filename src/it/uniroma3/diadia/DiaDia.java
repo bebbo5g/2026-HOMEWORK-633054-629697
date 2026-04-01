@@ -127,7 +127,7 @@ public class DiaDia {
 	
 	private void prendi(String nomeAttrezzo)
 	{
-		if(nomeAttrezzo == null || nomeAttrezzo.isEmpty()) {
+		/*if(nomeAttrezzo == null) {
 			System.out.println("Non hai scritto niente! ");
 			
 		}else{
@@ -141,9 +141,9 @@ public class DiaDia {
 				return;
 			}
 			
-			boolean rimosso = this.partita.giocatore.borsa.addAttrezzo(attrezzoStanza);
+			boolean aggiunto = this.partita.giocatore.borsa.addAttrezzo(attrezzoStanza);
 			
-			if(rimosso == true)
+			if(aggiunto)
 			{
 				stanzaCorr.removeAttrezzo(nomeAttrezzo);
 				
@@ -153,18 +153,36 @@ public class DiaDia {
 			else
 			{
 				System.out.println("Borsa piena o troppo pesante! Non puoi prendere '" + attrezzoStanza.getNome() + "'");
+			}		
+		}*/
+		if(nomeAttrezzo == null)
+			System.out.println("Non hai scritto niente!");
+		else
+		{
+			if(!this.partita.labirinto.corrente.hasAttrezzo(nomeAttrezzo))
+			{
+				System.out.println("L'attrezzo " + nomeAttrezzo + " non è presente in: " + this.partita.labirinto.corrente.getNome());
 			}
-			
-			
-				
+			else
+			{
+				Attrezzo attrezzo = this.partita.labirinto.corrente.getAttrezzo(nomeAttrezzo);
+					
+				if(this.partita.giocatore.borsa.addAttrezzo(attrezzo)) {
+					this.partita.labirinto.corrente.removeAttrezzo(nomeAttrezzo);
+					System.out.println("L'attrezzo: "+ nomeAttrezzo + " è stato aggiunto in borsa!");
+					System.out.println("La borsa pesa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
+				}
+				else if(this.partita.giocatore.borsa.isPiena())
+					System.out.println("Borsa piena!");
+				else
+					System.out.println("L'attrezzo è troppo pesante per essere preso!");
+			}
 		}
-		
-		
 	}
 	
 	private void posa(String nomeAttrezzo)
 	{
-		if(nomeAttrezzo == null || nomeAttrezzo.isEmpty())
+		/*if(nomeAttrezzo == null || nomeAttrezzo.isEmpty())
 		{
 			System.out.println("Nessun attrazzo da posare! ");
 		}
@@ -192,6 +210,24 @@ public class DiaDia {
 			{
 				System.out.println("Stanza piena din attrezzi impossibile posare: "+ attrezzo.getNome());
 			}
+		}*/
+		
+		if(!this.partita.giocatore.borsa.hasAttrezzo(nomeAttrezzo))
+		{
+			if(nomeAttrezzo == null)
+				System.out.println("Non hai scritto nulla!");
+			else
+				System.out.println("L'attrezzo "+ nomeAttrezzo + " non è presente in borsa!");
+		}else
+		{
+			Attrezzo attrezzo = this.partita.giocatore.borsa.getAttrezzo(nomeAttrezzo);
+			if(this.partita.labirinto.corrente.addAttrezzo(attrezzo)) {
+				this.partita.giocatore.borsa.removeAttrezzo(attrezzo);
+				System.out.println("Oggetto posato in stanza: " + this.partita.labirinto.corrente.getNome());
+			}else
+				System.out.println("Stanza piena di attrezzi, IMPOSSIBILE POSARE!");
+			
+			
 		}
 	}
 
