@@ -1,7 +1,5 @@
 package it.uniroma3.diadia;
 
-import java.util.Scanner;
-
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.giocatore.Borsa;
@@ -40,20 +38,15 @@ public class DiaDia {
 
 	public void gioca() {
 
-		String istruzione;
-		Scanner scannerDiLinee;
-
 		this.IO.mostraMessaggio(MESSAGGIO_BENVENUTO);
-
-		scannerDiLinee = new Scanner(System.in);
 
 		do {
 			System.out.print("> ");
-			istruzione = scannerDiLinee.nextLine();
-			processaIstruzione(istruzione);
-		} while (!this.partita.isFinita());
+			String istruzione = this.IO.leggiRiga();
 
-		scannerDiLinee.close();
+			processaIstruzione(istruzione);
+
+		} while (!this.partita.isFinita());
 
 		this.IO.mostraMessaggio("");
 		if (this.partita.vinta()) {
