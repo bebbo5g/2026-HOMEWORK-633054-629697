@@ -80,7 +80,7 @@ public class DiaDia {
 		if (this.partita.vinta()) {
 			System.out.println("Hai vinto!");
 			return true;
-		}else if(this.partita.isFinita() && this.partita.giocatore.getCfu() == 0){
+		}else if(this.partita.giocatore.getCfu() == 0){
 			System.out.println("Hai perso! CFU esuariti");
 			return true;
 		}else
@@ -169,7 +169,7 @@ public class DiaDia {
 					
 				if(this.partita.giocatore.borsa.addAttrezzo(attrezzo)) {
 					this.partita.labirinto.corrente.removeAttrezzo(nomeAttrezzo);
-					System.out.println("L'attrezzo: "+ nomeAttrezzo + " è stato aggiunto in borsa!");
+					System.out.println("L'attrezzo "+ nomeAttrezzo + " è stato aggiunto in borsa!");
 					System.out.println("La borsa pesa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
 				}
 				else if(this.partita.giocatore.borsa.isPiena())
@@ -212,22 +212,21 @@ public class DiaDia {
 			}
 		}*/
 		
-		if(!this.partita.giocatore.borsa.hasAttrezzo(nomeAttrezzo))
+		if(nomeAttrezzo == null)
+			System.out.println("Non hai scritto nulla!");
+		else
 		{
-			if(nomeAttrezzo == null)
-				System.out.println("Non hai scritto nulla!");
-			else
+			if(!this.partita.giocatore.borsa.hasAttrezzo(nomeAttrezzo))
 				System.out.println("L'attrezzo "+ nomeAttrezzo + " non è presente in borsa!");
-		}else
-		{
-			Attrezzo attrezzo = this.partita.giocatore.borsa.getAttrezzo(nomeAttrezzo);
-			if(this.partita.labirinto.corrente.addAttrezzo(attrezzo)) {
-				this.partita.giocatore.borsa.removeAttrezzo(attrezzo);
-				System.out.println("Oggetto posato in stanza: " + this.partita.labirinto.corrente.getNome());
-			}else
-				System.out.println("Stanza piena di attrezzi, IMPOSSIBILE POSARE!");
-			
-			
+			else{
+				Attrezzo attrezzo = this.partita.giocatore.borsa.getAttrezzo(nomeAttrezzo);
+				if(this.partita.labirinto.corrente.addAttrezzo(attrezzo)) {
+					this.partita.giocatore.borsa.removeAttrezzo(attrezzo);
+					System.out.println("Attrezzo" + attrezzo.getNome() + " posato in stanza: " + this.partita.labirinto.corrente.getNome());
+					System.out.println("Peso attuale borsa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
+				}else
+					System.out.println("Stanza piena di attrezzi, IMPOSSIBILE POSARE!");
+			}
 		}
 	}
 

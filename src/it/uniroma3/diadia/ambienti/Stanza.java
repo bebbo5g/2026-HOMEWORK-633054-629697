@@ -212,5 +212,9 @@ public class Stanza {
 	    	direzioni[i] = this.direzioni[i];
 	    return direzioni;
     }
+	
+	public int getNumeroStanzeAdiacenti() {
+		return this.numeroStanzeAdiacenti;
+	}
 
 }
