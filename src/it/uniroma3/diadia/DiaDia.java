@@ -65,7 +65,6 @@ public class DiaDia {
 
 		if (comandoDaEseguire.getNome().equals("fine")) {
 			this.fine(); 
-			return true;
 		} else if (comandoDaEseguire.getNome().equals("vai")) {
 			this.vai(comandoDaEseguire.getParametro());
 		}else if (comandoDaEseguire.getNome().equals("aiuto")) {
@@ -77,17 +76,13 @@ public class DiaDia {
 		}else {
 			System.out.println("Comando sconosciuto");
 		}
-		if (this.partita.vinta()) {
+		
+		if(this.partita.vinta()) {
 			System.out.println("Hai vinto!");
 			return true;
-		}else if(this.partita.giocatore.getCfu() == 0){
-			System.out.println("Hai perso! CFU esuariti");
-			return true;
-		}else
-			return false;
+		}
 		
-		
-		
+		return false;
 	}   
 
 	// implementazioni dei comandi dell'utente:
