@@ -1,0 +1,44 @@
+# Eclipse build output
+bin/
+out/
+
+# Eclipse workspace metadata (personal settings)
+.metadata/
+.recommenders/
+
+# Run configurations (local only)
+*.launch
+
+# Eclipse remote system explorer
+RemoteSystemsTempFiles/
+
+# Eclipse Oomph
+.oomph/
+
+# External tool builders
+.externalToolBuilders/
+
+# CDT (C/C++ Development Tools)
+.cproject
+
+# Java compiled files
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# Gradle
+.gradle/
+build/
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini

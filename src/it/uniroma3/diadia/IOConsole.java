@@ -1,20 +1,17 @@
 package it.uniroma3.diadia;
+
 import java.util.Scanner;
 
 public class IOConsole {
-	
-	
-	public void MostraMessaggio(String msg)
-	{
+	public void mostraMessaggio(String msg) {
 		System.out.println(msg);
 	}
-	
-	@SuppressWarnings("resource")
-	public String leggiRiga()
-	{
-		Scanner scannerDiLinee;
-		scannerDiLinee = new Scanner(System.in);
+
+	public String leggiRiga() {
+		Scanner scannerDiLinee = new Scanner(System.in);
 		String riga = scannerDiLinee.nextLine();
+		// scannerDiLinee.close();
+
 		return riga;
 	}
 }
