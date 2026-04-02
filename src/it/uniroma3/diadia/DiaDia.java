@@ -32,26 +32,29 @@ public class DiaDia {
 	static final private String[] elencoComandi = {"vai", "aiuto", "fine", "prendi", "posa"};
 	
 	private Partita partita;
+	private IOConsole IOc;
 
 	public DiaDia() {
 		this.partita = new Partita();
+		this.IOc = new IOConsole();
 	}
 
 	public void gioca() {
 		
 		String istruzione; 
-		Scanner scannerDiLinee;
-
-		System.out.println(MESSAGGIO_BENVENUTO);
+		//Scanner scannerDiLinee;
 		
-		scannerDiLinee = new Scanner(System.in);
+		this.IOc.MostraMessaggio(MESSAGGIO_BENVENUTO);
+		//System.out.println(MESSAGGIO_BENVENUTO);
+		
+		//scannerDiLinee = new Scanner(System.in);
 		
 		do		
-			istruzione = scannerDiLinee.nextLine();
+			istruzione = this.IOc.leggiRiga();
 		while (!processaIstruzione(istruzione));
 			
 		
-		scannerDiLinee.close();
+		//scannerDiLinee.close();
 	}   
 
 
@@ -75,13 +78,18 @@ public class DiaDia {
 		}else if(comandoDaEseguire.getNome().equals("posa")) {
 			this.posa(comandoDaEseguire.getParametro());
 		}else {
-			System.out.println("Comando sconosciuto");
+			//System.out.println("Comando sconosciuto");
+			this.IOc.MostraMessaggio("Comando sconosciuto");
 		}
+		
+		
 		if (this.partita.vinta()) {
-			System.out.println("Hai vinto!");
+			//System.out.println("Hai vinto!");
+			this.IOc.MostraMessaggio("Hai vinto!");
 			return true;
 		}else if(this.partita.giocatore.getCfu() == 0){
-			System.out.println("Hai perso! CFU esuariti");
+			//System.out.println("Hai perso! CFU esuariti");
+			this.IOc.MostraMessaggio("Hai perso! CFU esuariti");
 			return true;
 		}else
 			return false;
@@ -96,9 +104,11 @@ public class DiaDia {
 	 * Stampa informazioni di aiuto.
 	 */
 	private void aiuto() {
-		for(int i=0; i< elencoComandi.length; i++) 
-			System.out.print(elencoComandi[i]+" ");
-		System.out.println();
+		for(int i=0; i< elencoComandi.length; i++)
+			this.IOc.MostraMessaggio(elencoComandi[i]+" ");
+			//System.out.print(elencoComandi[i]+" ");
+		this.IOc.MostraMessaggio("");
+		
 	}
 
 	/**
@@ -107,18 +117,22 @@ public class DiaDia {
 	 */
 	private void vai(String direzione) {
 		if(direzione==null)
-			System.out.println("Dove vuoi andare ?");
+			this.IOc.MostraMessaggio("Dove vuoi andare ?");
+			//System.out.println("Dove vuoi andare ?");
+			
 		
 		Stanza prossimaStanza = null;
 		prossimaStanza = this.partita.labirinto.getStanzaCorrente().getStanzaAdiacente(direzione);
 		if (prossimaStanza == null)
-			System.out.println("Direzione inesistente");
+			this.IOc.MostraMessaggio("Direzione inesistente");
+			//System.out.println("Direzione inesistente");
 		else {
 			this.partita.labirinto.setStanzaCorrente(prossimaStanza);
 			int cfu = this.partita.giocatore.getCfu();
 			this.partita.giocatore.setCfu(cfu - 1);
 			
-			System.out.println("CFU rimantente: " + this.partita.giocatore.getCfu());
+			//System.out.println("CFU rimantente: " + this.partita.giocatore.getCfu());
+			this.IOc.MostraMessaggio("CFU rimantente: " + this.partita.giocatore.getCfu());
 		}
 		System.out.println(partita.labirinto.getStanzaCorrente().getDescrizione());
 	}
@@ -156,12 +170,14 @@ public class DiaDia {
 			}		
 		}*/
 		if(nomeAttrezzo == null)
-			System.out.println("Non hai scritto niente!");
+			//System.out.println("Non hai scritto niente!");
+			this.IOc.MostraMessaggio("Non hai scritto niente!");
 		else
 		{
 			if(!this.partita.labirinto.corrente.hasAttrezzo(nomeAttrezzo))
 			{
-				System.out.println("L'attrezzo " + nomeAttrezzo + " non è presente in: " + this.partita.labirinto.corrente.getNome());
+				this.IOc.MostraMessaggio("L'attrezzo " + nomeAttrezzo + " non è presente in: " + this.partita.labirinto.corrente.getNome());
+				//System.out.println("L'attrezzo " + nomeAttrezzo + " non è presente in: " + this.partita.labirinto.corrente.getNome());
 			}
 			else
 			{
@@ -169,13 +185,17 @@ public class DiaDia {
 					
 				if(this.partita.giocatore.borsa.addAttrezzo(attrezzo)) {
 					this.partita.labirinto.corrente.removeAttrezzo(nomeAttrezzo);
-					System.out.println("L'attrezzo "+ nomeAttrezzo + " è stato aggiunto in borsa!");
-					System.out.println("La borsa pesa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
+					this.IOc.MostraMessaggio("L'attrezzo "+ nomeAttrezzo + " è stato aggiunto in borsa!");
+					this.IOc.MostraMessaggio("La borsa pesa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
+					//System.out.println("L'attrezzo "+ nomeAttrezzo + " è stato aggiunto in borsa!");
+					//System.out.println("La borsa pesa: " + this.partita.giocatore.borsa.getPeso() + "kg/" + this.partita.giocatore.borsa.getPesoMax() + "kg");
 				}
 				else if(this.partita.giocatore.borsa.isPiena())
-					System.out.println("Borsa piena!");
+					this.IOc.MostraMessaggio("Borsa piena!");
+					//System.out.println("Borsa piena!");
 				else
-					System.out.println("L'attrezzo è troppo pesante per essere preso!");
+					this.IOc.MostraMessaggio("L'attrezzo è troppo pesante per essere preso!");
+					//System.out.println("L'attrezzo è troppo pesante per essere preso!");
 			}
 		}
 	}
