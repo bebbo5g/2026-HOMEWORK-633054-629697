@@ -1,4 +1,4 @@
-package it.uniroma3.diadia.giocatore;
+git package it.uniroma3.diadia.giocatore;
 
 import static org.junit.jupiter.api.Assertions.*;
 
