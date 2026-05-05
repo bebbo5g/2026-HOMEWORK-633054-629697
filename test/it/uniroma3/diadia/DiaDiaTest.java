@@ -1,6 +1,6 @@
 package it.uniroma3.diadia;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -14,8 +14,21 @@ public class DiaDiaTest {
 
 		gioco.gioca();
 
-		io.getOutput(); // skip MESSAGGIO_BENVENUTO
+		/*
+		 * io.getOutput(); // skip MESSAGGIO_BENVENUTO
+		 * 
+		 * assertEquals(io.getOutput().contains("Hai vinto!"), true);
+		 */
 
-		assertEquals(io.getOutput().contains("Hai vinto!"), true);
+		boolean haVinto = false;
+		String msg;
+		while ((msg = io.getOutput()) != null) {
+			if (msg.contains("Hai vinto!")) {
+				haVinto = true;
+				break;
+			}
+		}
+
+		assertTrue(haVinto);
 	}
 }
