@@ -44,7 +44,7 @@ public class ComandoPosa implements Comando {
 		if (partita.getStanzaCorrente().addAttrezzo(attrezzo)) {
 			borsa.removeAttrezzo(attrezzo);
 			this.io.mostraMessaggio(
-					"Attrezzo" + attrezzo.getNome() + " posato in stanza: " + partita.getStanzaCorrente().getNome());
+					"Attrezzo " + attrezzo.getNome() + " posato in stanza: " + partita.getStanzaCorrente().getNome());
 			this.io.mostraMessaggio("Peso attuale borsa: " + borsa.getPeso() + "kg/" + borsa.getPesoMax() + "kg");
 		} else {
 			this.io.mostraMessaggio("Stanza piena di attrezzi, IMPOSSIBILE POSARE!");

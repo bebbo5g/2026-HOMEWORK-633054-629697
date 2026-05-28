@@ -1,13 +1,11 @@
 package it.uniroma3.diadia.ambienti;
 
-import static org.junit.Assert.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class StanzaTest {
@@ -81,11 +79,11 @@ public class StanzaTest {
 	public void testGetDirezioni() {
 		Stanza corr = new Stanza("Aula");
 		Stanza adiacente = new Stanza("Ds2");
-		String[] atteso = { "sud" };
 
 		corr.impostaStanzaAdiacente("sud", adiacente);
 
-		assertArrayEquals(corr.getDirezioni(), atteso);
+		assertTrue(corr.getDirezioni().contains("sud"));
+		assertEquals(1, corr.getDirezioni().size());
 	}
 
 }
