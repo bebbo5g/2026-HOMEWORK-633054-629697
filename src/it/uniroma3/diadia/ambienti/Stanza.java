@@ -79,7 +79,7 @@ public class Stanza {
 	 * 
 	 * @return la collezione di attrezzi nella stanza.
 	 */
-	public Collection<Attrezzo> getAttrezzi() { // Attrezzo[]
+	public Collection<Attrezzo> getAttrezzi() {
 		return this.attrezzi.values();
 	}
 
