@@ -14,12 +14,6 @@ public class DiaDiaTest {
 
 		gioco.gioca();
 
-		/*
-		 * io.getOutput(); // skip MESSAGGIO_BENVENUTO
-		 * 
-		 * assertEquals(io.getOutput().contains("Hai vinto!"), true);
-		 */
-
 		boolean haVinto = false;
 		String msg;
 		while ((msg = io.getOutput()) != null) {
