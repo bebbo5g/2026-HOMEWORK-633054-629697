@@ -1,37 +1,69 @@
 package it.uniroma3.diadia;
 
-public class IOSimulator implements IO {
-	private String[] input;
-	private int input_count = 0;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
-	private String[] output;
-	private int output_count = 0;
-	private int get_output_idx = 0;
+public class IOSimulator implements IO {
+	private List<String> input;
+	private int inputIndex;
+
+	// per ogni riga letta (comando), lista dei messaggi prodotti
+	private Map<String, List<String>> outputPerComando;
+	private String ultimoComando;
+
+	// lista piatta di tutti i messaggi (per accesso semplice)
+	private List<String> output;
 
 	public IOSimulator() {
-		this(new String[0]);
+		this(new ArrayList<>());
 	}
 
-	public IOSimulator(String[] input) {
+	public IOSimulator(List<String> input) {
 		this.input = input;
-		this.output = new String[50];
+		this.inputIndex = 0;
+		this.output = new ArrayList<>();
+		this.outputPerComando = new LinkedHashMap<>();
+		this.ultimoComando = null;
 	}
 
 	@Override
 	public void mostraMessaggio(String msg) {
-		this.output[this.output_count++] = msg;
+		this.output.add(msg);
+		// associa il messaggio all'ultimo comando letto
+		if (this.ultimoComando != null) {
+			this.outputPerComando.computeIfAbsent(this.ultimoComando, k -> new ArrayList<>()).add(msg);
+		}
 	}
 
 	@Override
 	public String leggiRiga() {
-		return this.input[this.input_count++];
+		String riga = this.input.get(this.inputIndex++);
+		this.ultimoComando = riga;
+		this.outputPerComando.putIfAbsent(riga, new ArrayList<>());
+		return riga;
 	}
 
-	public String getOutput() {
-		if (this.get_output_idx >= this.output_count) {
-			return null;
-		}
+	/** Restituisce tutti i messaggi in ordine */
+	public List<String> getOutput() {
+		return this.output;
+	}
 
-		return this.output[this.get_output_idx++];
+	/** Restituisce i messaggi prodotti da un certo comando */
+	public List<String> getOutputPerComando(String comando) {
+		return this.outputPerComando.getOrDefault(comando, new ArrayList<>());
+	}
+
+	/** Restituisce la mappa comando → messaggi */
+	public Map<String, List<String>> getOutputPerComandi() {
+		return this.outputPerComando;
+	}
+
+	/** Restituisce l'i-esimo messaggio prodotto */
+	public String getOutput(int i) {
+		if (i >= this.output.size())
+			return null;
+		return this.output.get(i);
 	}
 }
