@@ -6,6 +6,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 
 import org.junit.jupiter.api.Test;
@@ -82,18 +85,168 @@ public class BorsaTest {
 	public void testSortedSetOrdinatoPerPesoAttrezziStessoPeso() {
 		Borsa borsa = new Borsa();
 		Attrezzo libro = new Attrezzo("libro", 5);
-		Attrezzo ps = new Attrezzo("ps", 5); // stesso peso, nome diverso
+		Attrezzo ps = new Attrezzo("ps", 5);
 
 		borsa.addAttrezzo(libro);
 		borsa.addAttrezzo(ps);
 
 		SortedSet<Attrezzo> risultato = borsa.getSortedSetOrdinatoPerPeso();
 
-		// entrambi presenti (non si sovrascrivono)
 		assertEquals(2, risultato.size());
 
-		// libro viene prima di ps (alfabeticamente, a parità di peso)
 		assertEquals("libro", risultato.first().getNome());
 		assertEquals("ps", risultato.last().getNome());
+	}
+
+	@Test
+	public void testOrdinatoPerPeso_vuota() {
+		Borsa borsa = new Borsa();
+
+		assertTrue(borsa.getContenutoOrdinatoPerPeso().isEmpty());
+	}
+
+	@Test
+	public void testOrdinatoPerPeso_unSoloAttrezzo() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("piuma", 1));
+
+		assertEquals("piuma", borsa.getContenutoOrdinatoPerPeso().get(0).getNome());
+	}
+
+	@Test
+	public void testOrdinatoPerPeso_ordinePeso() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("b", 7));
+		borsa.addAttrezzo(new Attrezzo("a", 1));
+
+		List<Attrezzo> lista = borsa.getContenutoOrdinatoPerPeso();
+
+		assertEquals("a", lista.get(0).getNome()); // peso 1 prima
+		assertEquals("b", lista.get(1).getNome()); // peso 10 dopo
+	}
+
+	@Test
+	public void testOrdinatoPerPeso_paritaPesoOrdinaNome() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("ps", 5));
+		borsa.addAttrezzo(new Attrezzo("libro", 5));
+
+		List<Attrezzo> lista = borsa.getContenutoOrdinatoPerPeso();
+
+		assertEquals("libro", lista.get(0).getNome()); // l < p
+		assertEquals("ps", lista.get(1).getNome());
+	}
+
+	@Test
+	public void testOrdinatoPerNome_vuota() {
+		Borsa borsa = new Borsa();
+
+		assertTrue(borsa.getContenutoOrdinatoPerNome().isEmpty());
+	}
+
+	@Test
+	public void testOrdinatoPerNome_unSoloAttrezzo() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("piuma", 1));
+
+		assertEquals("piuma", borsa.getContenutoOrdinatoPerNome().first().getNome());
+	}
+
+	@Test
+	public void testOrdinatoPerNome_ordineAlfabetico() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("ps", 5));
+		borsa.addAttrezzo(new Attrezzo("libro", 5));
+
+		SortedSet<Attrezzo> insieme = borsa.getContenutoOrdinatoPerNome();
+
+		assertEquals("libro", insieme.first().getNome());
+		assertEquals("ps", insieme.last().getNome());
+	}
+
+	@Test
+	public void testRaggruppatoPerPeso_vuota() {
+		Borsa borsa = new Borsa();
+
+		assertTrue(borsa.getContenutoRaggruppatoPerPeso().isEmpty());
+	}
+
+	@Test
+	public void testRaggruppatoPerPeso_unSoloAttrezzo() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("piuma", 1));
+
+		Map<Integer, Set<Attrezzo>> mappa = borsa.getContenutoRaggruppatoPerPeso();
+
+		assertEquals(1, mappa.size());
+		assertTrue(mappa.containsKey(1));
+		assertEquals(1, mappa.get(1).size());
+	}
+
+	@Test
+	public void testRaggruppatoPerPeso_dueAttrezziStessoPeso() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("libro", 5));
+		borsa.addAttrezzo(new Attrezzo("ps", 5));
+
+		Map<Integer, Set<Attrezzo>> mappa = borsa.getContenutoRaggruppatoPerPeso();
+
+		assertEquals(1, mappa.size()); // una sola chiave
+		assertEquals(2, mappa.get(5).size()); // due attrezzi sotto peso 5
+	}
+
+	@Test
+	public void testRaggruppatoPerPeso_pesoDistinti() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("piuma", 1));
+		borsa.addAttrezzo(new Attrezzo("piombo", 8));
+
+		Map<Integer, Set<Attrezzo>> mappa = borsa.getContenutoRaggruppatoPerPeso();
+
+		assertEquals(2, mappa.size());
+		assertTrue(mappa.containsKey(1));
+		assertTrue(mappa.containsKey(8));
+	}
+
+	@Test
+	public void testSortedSetPerPeso_vuota() {
+		Borsa borsa = new Borsa();
+
+		assertTrue(borsa.getSortedSetOrdinatoPerPeso().isEmpty());
+	}
+
+	@Test
+	public void testSortedSetPerPeso_ordinePeso() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("b", 8));
+		borsa.addAttrezzo(new Attrezzo("a", 1));
+
+		SortedSet<Attrezzo> set = borsa.getSortedSetOrdinatoPerPeso();
+
+		assertEquals("a", set.first().getNome()); // peso minore prima
+		assertEquals("b", set.last().getNome());
+	}
+
+	@Test
+	public void testSortedSetPerPeso_stessoPesoNomeDiversoEntrambiPresenti() {
+		Borsa borsa = new Borsa();
+
+		borsa.addAttrezzo(new Attrezzo("ps", 5));
+		borsa.addAttrezzo(new Attrezzo("libro", 5));
+
+		SortedSet<Attrezzo> set = borsa.getSortedSetOrdinatoPerPeso();
+
+		assertEquals(2, set.size()); // non si perdono
+		assertEquals("libro", set.first().getNome()); // l < p a parità di peso
+		assertEquals("ps", set.last().getNome());
 	}
 }
