@@ -6,6 +6,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.SortedSet;
+
 import org.junit.jupiter.api.Test;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
@@ -74,5 +76,24 @@ public class BorsaTest {
 		Borsa borsa = new Borsa();
 		borsa.addAttrezzo(new Attrezzo("spada", 3));
 		assertFalse(borsa.isEmpty());
+	}
+
+	@Test
+	public void testSortedSetOrdinatoPerPesoAttrezziStessoPeso() {
+		Borsa borsa = new Borsa();
+		Attrezzo libro = new Attrezzo("libro", 5);
+		Attrezzo ps = new Attrezzo("ps", 5); // stesso peso, nome diverso
+
+		borsa.addAttrezzo(libro);
+		borsa.addAttrezzo(ps);
+
+		SortedSet<Attrezzo> risultato = borsa.getSortedSetOrdinatoPerPeso();
+
+		// entrambi presenti (non si sovrascrivono)
+		assertEquals(2, risultato.size());
+
+		// libro viene prima di ps (alfabeticamente, a parità di peso)
+		assertEquals("libro", risultato.first().getNome());
+		assertEquals("ps", risultato.last().getNome());
 	}
 }

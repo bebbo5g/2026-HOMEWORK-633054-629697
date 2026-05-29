@@ -123,4 +123,11 @@ public class Borsa {
 		return mappa;
 	}
 
+	public SortedSet<Attrezzo> getSortedSetOrdinatoPerPeso() {
+		SortedSet<Attrezzo> insieme = new TreeSet<>(
+				Comparator.comparing(Attrezzo::getPeso).thenComparing(Attrezzo::getNome));
+		insieme.addAll(this.attrezzi.values());
+		return insieme;
+	}
+
 }
