@@ -1,9 +1,16 @@
 package it.uniroma3.diadia.giocatore;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
@@ -74,16 +81,17 @@ public class Borsa {
 
 	@Override
 	public String toString() {
-		if (!this.isEmpty()) {
-			StringBuilder s = new StringBuilder();
-			s.append("Contenuto borsa (" + this.getPeso() + "kg/" + this.getPesoMax() + "kg): ");
+		if (this.isEmpty())
+			return "Borsa vuota";
 
-			for (Attrezzo a : this.attrezzi.values())
-				s.append(a.toString()).append(" ");
-			return s.toString();
-		}
+		StringBuilder s = new StringBuilder();
 
-		return "Borsa vuota";
+		s.append("Contenuto borsa (").append(this.getPeso()).append("kg/").append(this.pesoMax).append("kg):\n");
+		s.append("  Per peso: ").append(this.getContenutoOrdinatoPerPeso()).append("\n");
+		s.append("  Per nome: ").append(this.getContenutoOrdinatoPerNome()).append("\n");
+		s.append("  Per peso raggruppato: ").append(this.getContenutoRaggruppatoPerPeso());
+
+		return s.toString();
 	}
 
 	public int getNumeroAttrezzi() {
@@ -92,6 +100,27 @@ public class Borsa {
 
 	public Collection<Attrezzo> getAttrezzi() {
 		return Collections.unmodifiableCollection(this.attrezzi.values());
+	}
+
+	public List<Attrezzo> getContenutoOrdinatoPerPeso() {
+		List<Attrezzo> lista = new ArrayList<>(this.attrezzi.values());
+		lista.sort(Comparator.comparingInt(Attrezzo::getPeso).thenComparing(Attrezzo::getNome));
+		return lista;
+	}
+
+	public SortedSet<Attrezzo> getContenutoOrdinatoPerNome() {
+		SortedSet<Attrezzo> insieme = new TreeSet<>(Comparator.comparing(Attrezzo::getNome));
+		insieme.addAll(this.attrezzi.values());
+		return insieme;
+	}
+
+	public Map<Integer, Set<Attrezzo>> getContenutoRaggruppatoPerPeso() {
+		Map<Integer, Set<Attrezzo>> mappa = new HashMap<>();
+
+		for (Attrezzo a : this.attrezzi.values())
+			mappa.computeIfAbsent(a.getPeso(), k -> new HashSet<>()).add(a);
+
+		return mappa;
 	}
 
 }
