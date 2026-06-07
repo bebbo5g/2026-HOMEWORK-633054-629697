@@ -6,46 +6,54 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.ambienti.Labirinto;
+import it.uniroma3.diadia.ambienti.LabirintoBuilder;
 import it.uniroma3.diadia.ambienti.Stanza;
 
 public class PartitaTest {
 
+	private Partita creaPartita() {
+		Labirinto labirinto = new LabirintoBuilder().addStanzaIniziale("Atrio").addStanzaVincente("Biblioteca")
+				.addAdiacenza("Atrio", "Biblioteca", "nord").getLabirinto();
+		return new Partita(labirinto);
+	}
+
 	@Test
 	public void testIsFinitaInizio() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		assertFalse(partita.isFinita());
 	}
 
 	@Test
 	public void testIsFinitaDopoSetFinita() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		partita.setFinita();
 		assertTrue(partita.isFinita());
 	}
 
 	@Test
 	public void testVintaInizio() {
-		Partita partita = new Partita();
-		assertFalse(partita.vinta());
+		Partita partita = creaPartita();
+		assertFalse(partita.vinta()); // all'inizio si è in Atrio, non in Biblioteca
 	}
 
 	@Test
 	public void testVintaQuandoStanzaFinale() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		partita.setStanzaCorrente(partita.getStanzaVincente());
 		assertTrue(partita.vinta());
 	}
 
 	@Test
 	public void testIsFinitaCfuEsauriti() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		partita.getGiocatore().setCfu(0);
 		assertTrue(partita.isFinita());
 	}
 
 	@Test
 	public void testSetStanzaCorrenteDecremantaCfu() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		int cfuIniziali = partita.getGiocatore().getCfu();
 		Stanza nuovaStanza = new Stanza("nuova");
 		partita.setStanzaCorrente(nuovaStanza);
@@ -54,7 +62,7 @@ public class PartitaTest {
 
 	@Test
 	public void testSetStanzaCorrenteStessaStanzaNonDecremantaCfu() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		int cfuIniziali = partita.getGiocatore().getCfu();
 		partita.setStanzaCorrente(partita.getStanzaCorrente());
 		assertEquals(cfuIniziali, partita.getGiocatore().getCfu());
@@ -62,7 +70,7 @@ public class PartitaTest {
 
 	@Test
 	public void testSetStanzaCorrenteNull() {
-		Partita partita = new Partita();
+		Partita partita = creaPartita();
 		Stanza stanzaPrima = partita.getStanzaCorrente();
 		partita.setStanzaCorrente(null);
 		assertEquals(stanzaPrima, partita.getStanzaCorrente());

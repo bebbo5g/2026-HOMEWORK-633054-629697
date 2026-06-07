@@ -18,4 +18,8 @@ public class Giocatore {
 	public int getCfu() {
 		return this.cfu;
 	}
+
+	public Borsa getBorsa() {
+		return this.borsa;
+	}
 }

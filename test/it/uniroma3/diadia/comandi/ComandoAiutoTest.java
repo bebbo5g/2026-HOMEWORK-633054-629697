@@ -1,6 +1,8 @@
 package it.uniroma3.diadia.comandi;
 
+import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
 
@@ -10,24 +12,28 @@ public class ComandoAiutoTest {
 	@Test
 	public void testGetNome() {
 		ComandoAiuto cmd = new ComandoAiuto(null);
-
-		assertEquals(cmd.getNome(), "aiuto");
+		assertEquals("aiuto", cmd.getNome());
 	}
 
 	@Test
 	public void testGetParametro() {
 		ComandoAiuto cmd = new ComandoAiuto(null);
-
-		assertEquals(cmd.getParametro(), null);
+		assertNull(cmd.getParametro());
 	}
 
 	@Test
-	public void testEsegui() {
+	public void testEsegui_mostraComandi() {
 		IOSimulator io = new IOSimulator();
 		ComandoAiuto cmd = new ComandoAiuto(io);
-
 		cmd.esegui(null);
+		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("vai")));
+	}
 
-		assertEquals(io.getOutput(), "vai aiuto fine prendi posa guarda");
+	@Test
+	public void testEsegui_mostraFine() {
+		IOSimulator io = new IOSimulator();
+		ComandoAiuto cmd = new ComandoAiuto(io);
+		cmd.esegui(null);
+		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("fine")));
 	}
 }

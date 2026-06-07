@@ -25,13 +25,13 @@ class StanzaMagicaTest {
 	@Test
 	public void testMagicaTrasforma() {
 		StanzaMagica magica = new StanzaMagica("Magica");
-		
+
 		magica.addAttrezzo(new Attrezzo("a", 1));
 		magica.addAttrezzo(new Attrezzo("b", 1));
 		magica.addAttrezzo(new Attrezzo("c", 1));
 		magica.addAttrezzo(new Attrezzo("ossa", 2));
-		
-		assertFalse(magica.hasAttrezzo("ossa"));
-		assertTrue(magica.hasAttrezzo("asso")); 
 
+		assertFalse(magica.hasAttrezzo("ossa"));
+		assertTrue(magica.hasAttrezzo("asso"));
+	}
 }

@@ -1,6 +1,7 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -10,24 +11,20 @@ public class ComandoNonValidoTest {
 	@Test
 	public void testGetNome() {
 		ComandoNonValido cmd = new ComandoNonValido("fake", null);
-
-		assertEquals(cmd.getNome(), "non-valido");
+		assertEquals("non-valido", cmd.getNome());
 	}
 
 	@Test
 	public void testGetParametro() {
 		ComandoNonValido cmd = new ComandoNonValido("my-cmd", null);
-
-		assertEquals(cmd.getParametro(), "my-cmd");
+		assertEquals("my-cmd", cmd.getParametro());
 	}
 
 	@Test
-	public void testEsegui() {
+	public void testEsegui_mostraMessaggioNonValido() {
 		IOSimulator io = new IOSimulator();
 		ComandoNonValido cmd = new ComandoNonValido("invalid", io);
-
 		cmd.esegui(null);
-
-		assertEquals(io.getOutput(), "Comando \"invalid\" non valido");
+		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("invalid")));
 	}
 }

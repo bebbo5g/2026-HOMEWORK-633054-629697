@@ -27,4 +27,8 @@ public class StanzaMagica extends Stanza {
 		return super.addAttrezzo(attr);
 	}
 
+	public boolean isMagica() {
+		return true;
+	}
+
 }

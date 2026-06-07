@@ -9,7 +9,7 @@ class TestLabirinto {
 
 	@Test
 	public void testStanzaInizialeEFinale() {
-		Labirinto lab = new Labirinto();
+		Labirinto lab = new Labirinto(true);
 
 		assertEquals("Atrio", lab.iniziale.getNome());
 		assertEquals("Biblioteca", lab.finale.getNome());
@@ -17,7 +17,7 @@ class TestLabirinto {
 
 	@Test
 	public void testCollegamentiAtrio() {
-		Labirinto lab = new Labirinto();
+		Labirinto lab = new Labirinto(true);
 		Stanza atrio = lab.iniziale;
 
 		assertEquals("Biblioteca", atrio.getStanzaAdiacente("nord").getNome());
@@ -28,7 +28,7 @@ class TestLabirinto {
 
 	@Test
 	public void testCollegamentiReciproci() {
-		Labirinto lab = new Labirinto();
+		Labirinto lab = new Labirinto(true);
 		Stanza atrio = lab.iniziale;
 		Stanza aulaN11 = atrio.getStanzaAdiacente("est");
 
@@ -37,7 +37,7 @@ class TestLabirinto {
 
 	@Test
 	public void testAttrezzi() {
-		Labirinto lab = new Labirinto();
+		Labirinto lab = new Labirinto(true);
 
 		Stanza atrio = lab.iniziale;
 		Stanza aulaN10 = atrio.getStanzaAdiacente("sud");

@@ -8,7 +8,26 @@ public class Labirinto {
 	public Stanza finale;
 
 	public Labirinto() {
+	}
+
+	public Labirinto(boolean default_) {
 		this.creaStanze();
+	}
+
+	public Stanza getStanzaIniziale() {
+		return this.iniziale;
+	}
+
+	public Stanza getStanzaFinale() {
+		return this.finale;
+	}
+
+	public void setIniziale(Stanza s) {
+		this.iniziale = s;
+	}
+
+	public void setFinale(Stanza s) {
+		this.finale = s;
 	}
 
 	private void creaStanze() {

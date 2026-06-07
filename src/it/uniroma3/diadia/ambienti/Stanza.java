@@ -1,9 +1,9 @@
 package it.uniroma3.diadia.ambienti;
 
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
@@ -74,15 +74,6 @@ public class Stanza {
 		return this.toString();
 	}
 
-	/**
-	 * Restituisce la collezione di attrezzi presenti nella stanza.
-	 * 
-	 * @return la collezione di attrezzi nella stanza.
-	 */
-	public Collection<Attrezzo> getAttrezzi() {
-		return this.attrezzi.values();
-	}
-
 	public int getNumeroAttrezzi() {
 		return this.attrezzi.size();
 	}
@@ -125,6 +116,24 @@ public class Stanza {
 		return risultato.toString();
 	}
 
+	/*
+	 * java.lang.AssertionError: expected:<{nord=corridoio bloccato Uscite: Attrezzi
+	 * nella stanza: , sud=Atrio Uscite: Attrezzi nella stanza: , est=stanza magica
+	 * Uscite: Attrezzi nella stanza: , ovest=stanza buia Uscite: Attrezzi nella
+	 * stanza: }> but was: <{nord=corridoio bloccato Uscite: nord sud Attrezzi nella
+	 * stanza: , sud=Atrio Uscite: nord Attrezzi nella stanza: , est=stanza magica
+	 * Uscite: ovest Attrezzi nella stanza: , ovest=stanza buia Uscite: est Attrezzi
+	 * nella stanza: }> at org.junit.Assert.fail(Assert.java:89) at
+	 * org.junit.Assert.failNotEquals(Assert.java:835) at
+	 * org.junit.Assert.assertEquals(Assert.java:120) at
+	 * org.junit.Assert.assertEquals(Assert.java:146) at
+	 * it.uniroma3.diadia.ambienti.TestLabirintoBuilder.
+	 * testLabirintoCompletoConTutteLeStanze(TestLabirintoBuilder.java:310) at
+	 * java.lang.reflect.Method.invoke(Method.java:498) at
+	 * java.util.ArrayList.forEach(ArrayList.java:1259) at
+	 * java.util.ArrayList.forEach(ArrayList.java:1259)
+	 * 
+	 */
 	/**
 	 * Controlla se un attrezzo esiste nella stanza (uguaglianza sul nome).
 	 * 
@@ -154,12 +163,25 @@ public class Stanza {
 		return this.attrezzi.remove(nomeAttrezzo) != null;
 	}
 
-	public Set<String> getDirezioni() {
-		return this.stanzeAdiacenti.keySet();
-	}
-
 	public int getNumeroStanzeAdiacenti() {
 		return this.stanzeAdiacenti.size();
+	}
+
+	// restituisce la mappa delle stanze adiacenti (usata nei test con assertEquals
+	// su Map)
+	public Map<String, Stanza> getMapStanzeAdiacenti() {
+		return this.stanzeAdiacenti;
+	}
+
+	// getDirezioni() deve restituire List (i test usano Collections.singletonList e
+	// containsAll)
+	public List<String> getDirezioni() {
+		return new ArrayList<>(this.stanzeAdiacenti.keySet());
+	}
+
+	// getAttrezzi() deve restituire List (i test usano Arrays.asList e indexOf)
+	public List<Attrezzo> getAttrezzi() {
+		return new ArrayList<>(this.attrezzi.values());
 	}
 
 }

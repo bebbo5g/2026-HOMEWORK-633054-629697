@@ -2,27 +2,19 @@ package it.uniroma3.diadia;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.Arrays;
+
 import org.junit.jupiter.api.Test;
 
 public class DiaDiaTest {
 
 	@Test
 	public void testGiocoCompleto() {
-		String[] input = { "vai nord" };
-		IOSimulator io = new IOSimulator(input);
+		IOSimulator io = new IOSimulator(Arrays.asList("vai nord"));
 		DiaDia gioco = new DiaDia(io);
 
 		gioco.gioca();
 
-		boolean haVinto = false;
-		String msg;
-		while ((msg = io.getOutput()) != null) {
-			if (msg.contains("Hai vinto!")) {
-				haVinto = true;
-				break;
-			}
-		}
-
-		assertTrue(haVinto);
+		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("Hai vinto!")));
 	}
 }
