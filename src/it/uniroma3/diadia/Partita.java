@@ -21,7 +21,7 @@ public class Partita {
 	private Giocatore giocatore;
 
 	public Partita() {
-		this(new Labirinto());
+		this(new Labirinto(true));
 	}
 
 	public Partita(Labirinto labirinto) {
