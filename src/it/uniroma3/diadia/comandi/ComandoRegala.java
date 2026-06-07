@@ -4,14 +4,13 @@ import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
-public class ComandoRegala implements Comando {
+public class ComandoRegala extends AbstractComando {
 	private static final String NOME = "regala";
 	private final String nomeAttrezzo;
-	private final IO io;
 
 	public ComandoRegala(String nomeAttrezzo, IO io) {
+		super(io);
 		this.nomeAttrezzo = nomeAttrezzo;
-		this.io = io;
 	}
 
 	@Override

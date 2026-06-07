@@ -3,14 +3,13 @@ package it.uniroma3.diadia.comandi;
 import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 
-public class ComandoNonValido implements Comando {
+public class ComandoNonValido extends AbstractComando {
 	final private String nome = "non-valido";
 	final private String cmd;
-	final private IO io;
 
 	public ComandoNonValido(String cmd, IO io) {
+		super(io);
 		this.cmd = cmd;
-		this.io = io;
 	}
 
 	@Override

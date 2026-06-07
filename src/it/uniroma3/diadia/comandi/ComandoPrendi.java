@@ -5,14 +5,13 @@ import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.giocatore.Borsa;
 
-public class ComandoPrendi implements Comando {
+public class ComandoPrendi extends AbstractComando {
 	final private String nome = "prendi";
 	final private String nomeAttrezzo;
-	final private IO io;
 
 	public ComandoPrendi(String nomeAttrezzo, IO io) {
+		super(io);
 		this.nomeAttrezzo = nomeAttrezzo;
-		this.io = io;
 	}
 
 	@Override

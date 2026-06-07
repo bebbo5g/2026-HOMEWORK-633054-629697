@@ -4,14 +4,13 @@ import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.ambienti.Stanza;
 
-public class ComandoVai implements Comando {
+public class ComandoVai extends AbstractComando {
 	final private String nome = "vai";
 	final private String direzione;
-	final private IO io;
 
 	public ComandoVai(String direzione, IO io) {
+		super(io);
 		this.direzione = direzione;
-		this.io = io;
 	}
 
 	@Override
