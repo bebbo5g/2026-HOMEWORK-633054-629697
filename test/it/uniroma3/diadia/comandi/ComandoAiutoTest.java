@@ -2,6 +2,7 @@ package it.uniroma3.diadia.comandi;
 
 import static org.junit.Assert.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.Test;
@@ -17,24 +18,27 @@ public class ComandoAiutoTest {
 
 	@Test
 	public void testGetParametro() {
-		ComandoAiuto cmd = new ComandoAiuto(null);
-		assertNull(cmd.getParametro());
+		assertNull(new ComandoAiuto(null).getParametro());
 	}
 
 	@Test
-	public void testEsegui_mostraComandi() {
+	public void testEsegui_mostraTuttiIComandi() {
 		IOSimulator io = new IOSimulator();
-		ComandoAiuto cmd = new ComandoAiuto(io);
-		cmd.esegui(null);
-		for (String nomeCmd : ComandoAiuto.elencoComandi)
-			assertTrue(io.getOutput().stream().anyMatch(s -> s.contains(nomeCmd)));
+
+		new ComandoVai("nord", io);
+		new ComandoPrendi("x", io);
+		new ComandoPosa("x", io);
+		new ComandoGuarda(io);
+		new ComandoFine(io);
+		new ComandoAiuto(io).esegui(null);
+
+		for (String nome : AbstractComando.getNomiComandi())
+			assertTrue(io.getOutput().stream().anyMatch(s -> s.contains(nome)), "Manca il comando: " + nome);
 	}
 
 	@Test
-	public void testEsegui_mostraFine() {
-		IOSimulator io = new IOSimulator();
-		ComandoAiuto cmd = new ComandoAiuto(io);
-		cmd.esegui(null);
-		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("fine")));
+	public void testNomiComandiNonContieneNonValido() {
+		new ComandoNonValido("x", null);
+		assertFalse(AbstractComando.getNomiComandi().contains("nonvalido"));
 	}
 }
