@@ -1,6 +1,7 @@
 package it.uniroma3.diadia.personaggi;
 
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public abstract class AbstractPersonaggio {
 
@@ -23,6 +24,10 @@ public abstract class AbstractPersonaggio {
 		return this.haSalutato;
 	}
 
+	public String getPresentazione() {
+		return this.presentazione;
+	}
+
 	public String saluta() {
 		StringBuilder risposta = new StringBuilder("Ciao, io sono ");
 
@@ -37,6 +42,8 @@ public abstract class AbstractPersonaggio {
 	}
 
 	abstract public String agisci(Partita partita);
+
+	public abstract String riceviRegalo(Attrezzo attrezzo, Partita partita);
 
 	@Override
 	public String toString() {

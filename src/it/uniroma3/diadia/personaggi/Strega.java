@@ -2,6 +2,7 @@ package it.uniroma3.diadia.personaggi;
 
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.ambienti.Stanza;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Strega extends AbstractPersonaggio {
 	private static final String MESSAGGIO_PERMALOSA = "Non mi hai salutata! Ti mando nella stanza più povera!";
@@ -16,7 +17,7 @@ public class Strega extends AbstractPersonaggio {
 		Stanza corrente = partita.getStanzaCorrente();
 		Stanza destinazione;
 
-		if (!this.isSalutato()) {
+		if (!this.haSalutato()) {
 			// non salutata → stanza adiacente con MENO attrezzi
 			destinazione = getStanzaConMenoAttrezzi(corrente);
 			partita.setStanzaCorrente(destinazione);
@@ -47,5 +48,10 @@ public class Strega extends AbstractPersonaggio {
 				massima = adiacente;
 		}
 		return massima != null ? massima : corrente;
+	}
+
+	@Override
+	public String riceviRegalo(Attrezzo attrezzo, Partita partita) {
+		return "Ah ah ah! Che bel regalino... lo tengo io! *ride fragorosamente*";
 	}
 }

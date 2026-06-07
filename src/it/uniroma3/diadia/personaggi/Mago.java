@@ -27,4 +27,11 @@ public class Mago extends AbstractPersonaggio {
 		}
 		return msg;
 	}
+
+	@Override
+	public String riceviRegalo(Attrezzo attrezzo, Partita partita) {
+		Attrezzo dimezzato = new Attrezzo(attrezzo.getNome(), attrezzo.getPeso() / 2);
+		partita.getStanzaCorrente().addAttrezzo(dimezzato);
+		return "Con un gesto magico dimezzo il peso di " + attrezzo.getNome() + " e lo lascio cadere nella stanza!";
+	}
 }
