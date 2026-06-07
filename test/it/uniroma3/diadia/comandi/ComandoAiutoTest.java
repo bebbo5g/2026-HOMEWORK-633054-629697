@@ -26,7 +26,8 @@ public class ComandoAiutoTest {
 		IOSimulator io = new IOSimulator();
 		ComandoAiuto cmd = new ComandoAiuto(io);
 		cmd.esegui(null);
-		assertTrue(io.getOutput().stream().anyMatch(s -> s.contains("vai")));
+		for (String nomeCmd : ComandoAiuto.elencoComandi)
+			assertTrue(io.getOutput().stream().anyMatch(s -> s.contains(nomeCmd)));
 	}
 
 	@Test
