@@ -1,6 +1,7 @@
 package it.uniroma3.diadia;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -9,6 +10,7 @@ import java.io.StringReader;
 import org.junit.jupiter.api.Test;
 
 import it.uniroma3.diadia.ambienti.Labirinto;
+import it.uniroma3.diadia.personaggi.Cane;
 
 class CaricatoreLabirintoTest {
 
@@ -96,6 +98,39 @@ class CaricatoreLabirintoTest {
 				+ "Attrezzi:\nUscite:\nN10 nord Biblioteca\nN10 est N11\nN11 ovest N10\n");
 		assertEquals("Biblioteca", l.getStanzaIniziale().getStanzaAdiacente("nord").getNome());
 		assertEquals("N11", l.getStanzaIniziale().getStanzaAdiacente("est").getNome());
+	}
+
+	@Test
+	public void testStanzaBuia() throws Exception {
+		String testo = "Stanze:\nN10\n" + "Stanze buie:\nCantina lanterna\n" + "Estremi:\nN10\nN10\n" + "Attrezzi:\n"
+				+ "Uscite:\n";
+		Labirinto l = carica(testo);
+		assertTrue(l.getStanzaIniziale().getDescrizione().length() > 0);
+	}
+
+	@Test
+	public void testPersonaggioMago() throws Exception {
+		String testo = "Stanze:\nN10\nBiblioteca\n" + "Estremi:\nN10\nBiblioteca\n" + "Attrezzi:\n"
+				+ "Personaggi:\nMago Merlino Ciao! bacchetta 3 N10\n" + "Uscite:\n";
+		Labirinto l = carica(testo);
+		assertNotNull(l.getStanzaIniziale().getPersonaggio());
+		assertEquals("Merlino", l.getStanzaIniziale().getPersonaggio().getNome());
+	}
+
+	@Test
+	public void testPersonaggioCane() throws Exception {
+		String testo = "Stanze:\nN10\nBiblioteca\n" + "Estremi:\nN10\nBiblioteca\n" + "Attrezzi:\n"
+				+ "Personaggi:\nCane Fido Bau! N10\n" + "Uscite:\n";
+		Labirinto l = carica(testo);
+		assertNotNull(l.getStanzaIniziale().getPersonaggio());
+		assertTrue(l.getStanzaIniziale().getPersonaggio() instanceof Cane);
+	}
+
+	@Test
+	public void testTipoPersonaggioSconosciuto() {
+		String testo = "Stanze:\nN10\n" + "Estremi:\nN10\nN10\n" + "Attrezzi:\n"
+				+ "Personaggi:\nDrago Smaug Ruggito! N10\n" + "Uscite:\n";
+		assertThrows(FormatoFileNonValidoException.class, () -> carica(testo));
 	}
 
 }

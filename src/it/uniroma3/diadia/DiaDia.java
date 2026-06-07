@@ -2,9 +2,12 @@ package it.uniroma3.diadia;
 
 import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.LabirintoBuilder;
+import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.comandi.Comando;
 import it.uniroma3.diadia.comandi.FabbricaComandiIntrospettiva;
 import it.uniroma3.diadia.personaggi.Cane;
+import it.uniroma3.diadia.personaggi.Mago;
+import it.uniroma3.diadia.personaggi.Strega;
 
 /**
  * Classe principale di diadia, un semplice gioco di ruolo ambientato al dia.
@@ -69,8 +72,14 @@ public class DiaDia {
 	public static void main(String[] argc) {
 		IO io = new IOConsole();
 
-		Labirinto labirinto = new LabirintoBuilder().addStanzaIniziale("LabCampusOne").addStanzaVincente("Biblioteca")
-				.addAdiacenza("LabCampusOne", "Biblioteca", "ovest").getLabirinto();
+		Labirinto labirinto = new LabirintoBuilder().addStanza("N10").addStanza("Biblioteca").addStanza("Corridoio")
+				.addStanzaBuia("Cantina", "lanterna").addStanzaBloccata("Corridoio", "nord", "chiave")
+				.addStanzaMagica("LabMagico", 2).addStanzaIniziale("N10").addStanzaVincente("Biblioteca")
+				.addAttrezzo("Osso", 5, "N10").addAttrezzo("Chiave", 1, "Corridoio")
+				.addPersonaggio(new Mago("Merlino", "Benvenuto!", new Attrezzo("bacchetta", 3)), "N10")
+				.addPersonaggio(new Cane("Fido", "Bau!"), "Biblioteca")
+				.addPersonaggio(new Strega("Sabrina", "Attenta!"), "Cantina").addAdiacenza("N10", "Biblioteca", "nord")
+				.addAdiacenza("Biblioteca", "N10", "sud").addAdiacenza("N10", "Corridoio", "est").getLabirinto();
 
 		labirinto.getStanzaIniziale().setPersonaggio(new Cane("Fido", "Sono un cane molto simpatico!"));
 
