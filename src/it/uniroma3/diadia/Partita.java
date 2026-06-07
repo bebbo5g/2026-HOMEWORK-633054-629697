@@ -93,4 +93,5 @@ public class Partita {
 	public void setFinita() {
 		this.finita = true;
 	}
+
 }

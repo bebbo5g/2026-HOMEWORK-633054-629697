@@ -7,7 +7,8 @@ import it.uniroma3.diadia.IO;
 public class FabbricaComandiIntrospettiva implements FabbricaDiComandi {
 	private static final String PACKAGE_COMANDI = "it.uniroma3.diadia.comandi.Comando";
 
-	private static final String[] NOMI_CLASSI = { "Vai", "Prendi", "Posa", "Guarda", "Aiuto", "Fine", "Regala" };
+	private static final String[] NOMI_CLASSI = { "Vai", "Prendi", "Posa", "Guarda", "Aiuto", "Fine", "Regala",
+			"Saluta", "Interagisci" };
 
 	private final IO io;
 

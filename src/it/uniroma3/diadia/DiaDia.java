@@ -4,6 +4,7 @@ import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.ambienti.LabirintoBuilder;
 import it.uniroma3.diadia.comandi.Comando;
 import it.uniroma3.diadia.comandi.FabbricaComandiIntrospettiva;
+import it.uniroma3.diadia.personaggi.Cane;
 
 /**
  * Classe principale di diadia, un semplice gioco di ruolo ambientato al dia.
@@ -70,6 +71,8 @@ public class DiaDia {
 
 		Labirinto labirinto = new LabirintoBuilder().addStanzaIniziale("LabCampusOne").addStanzaVincente("Biblioteca")
 				.addAdiacenza("LabCampusOne", "Biblioteca", "ovest").getLabirinto();
+
+		labirinto.getStanzaIniziale().setPersonaggio(new Cane("Fido", "Sono un cane molto simpatico!"));
 
 		DiaDia gioco = new DiaDia(labirinto, io);
 		gioco.gioca();

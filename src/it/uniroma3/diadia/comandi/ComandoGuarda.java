@@ -18,6 +18,8 @@ public class ComandoGuarda extends AbstractComando {
 	@Override
 	public void esegui(Partita partita) {
 		this.io.mostraMessaggio(partita.getStanzaCorrente().getDescrizione());
+		this.io.mostraMessaggio(partita.getGiocatore().getBorsa().toString());
+		this.io.mostraMessaggio("CFU rimanenti: " + partita.getGiocatore().getCfu());
 	}
 
 }

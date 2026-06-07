@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
+import it.uniroma3.diadia.personaggi.AbstractPersonaggio;
 
 /**
  * Classe Stanza - una stanza in un gioco di ruolo. Una stanza e' un luogo
@@ -113,6 +114,9 @@ public class Stanza {
 		for (Attrezzo attrezzo : this.attrezzi.values())
 			risultato.append(attrezzo.toString()).append(" ");
 
+		if (this.personaggio != null)
+			risultato.append("\nPersonaggio: ").append(this.personaggio.getNome());
+
 		return risultato.toString();
 	}
 
@@ -182,6 +186,16 @@ public class Stanza {
 	// getAttrezzi() deve restituire List (i test usano Arrays.asList e indexOf)
 	public List<Attrezzo> getAttrezzi() {
 		return new ArrayList<>(this.attrezzi.values());
+	}
+
+	private AbstractPersonaggio personaggio;
+
+	public AbstractPersonaggio getPersonaggio() {
+		return this.personaggio;
+	}
+
+	public void setPersonaggio(AbstractPersonaggio personaggio) {
+		this.personaggio = personaggio;
 	}
 
 }
