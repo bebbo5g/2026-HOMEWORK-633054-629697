@@ -1,24 +1,13 @@
 package it.uniroma3.diadia;
 
+import java.util.Scanner;
+
+import it.uniroma3.diadia.ambienti.Direzione;
 import it.uniroma3.diadia.ambienti.Labirinto;
-import it.uniroma3.diadia.ambienti.LabirintoBuilder;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 import it.uniroma3.diadia.comandi.Comando;
-import it.uniroma3.diadia.comandi.FabbricaComandiIntrospettiva;
-import it.uniroma3.diadia.personaggi.Cane;
-import it.uniroma3.diadia.personaggi.Mago;
-import it.uniroma3.diadia.personaggi.Strega;
-
-/**
- * Classe principale di diadia, un semplice gioco di ruolo ambientato al dia.
- * Per giocare crea un'istanza di questa classe e invoca il metodo gioca
- *
- * Questa e' la classe principale crea e istanzia tutte le altre
- *
- * @author docente di POO (da un'idea di Michael Kolling and David J. Barnes)
- * 
- * @version base
- */
+import it.uniroma3.diadia.comandi.FabbricaDiComandi;
+import it.uniroma3.diadia.comandi.FabbricaDiComandiRiflessiva;
 
 public class DiaDia {
 
@@ -32,59 +21,61 @@ public class DiaDia {
 			+ "Per conoscere le istruzioni usa il comando 'aiuto'.";
 
 	private Partita partita;
-	final private IO io;
-	final private FabbricaComandiIntrospettiva fabbrica;
-
-	public DiaDia(IO io) {
-		this(new Labirinto(true), io);
-	}
+	private IO io;
 
 	public DiaDia(Labirinto labirinto, IO io) {
 		this.partita = new Partita(labirinto);
 		this.io = io;
-		this.fabbrica = new FabbricaComandiIntrospettiva(io);
 	}
 
 	public void gioca() {
-
+		String istruzione;
 		this.io.mostraMessaggio(MESSAGGIO_BENVENUTO);
-
 		do {
-			System.out.print("> ");
-			String istruzione = this.io.leggiRiga();
+			istruzione = this.io.leggiRiga();
+		} while (!processaIstruzione(istruzione));
+	}
 
-			Comando cmd = this.fabbrica.costruisciComando(istruzione);
-
-			cmd.esegui(this.partita);
-
-		} while (!this.partita.isFinita());
-
-		this.io.mostraMessaggio("");
+	private boolean processaIstruzione(String istruzione) {
+		FabbricaDiComandi factory = new FabbricaDiComandiRiflessiva();
+		Comando comandoDaEseguire = factory.costruisciComando(istruzione);
+		comandoDaEseguire.esegui(this.partita, this.io);
 		if (this.partita.vinta()) {
 			this.io.mostraMessaggio("Hai vinto!");
-		} else if (this.partita.getGiocatore().getCfu() <= 0) {
-			this.io.mostraMessaggio("Hai esaurito i CFU! Game Over!");
+			return true;
 		}
-
-		this.io.mostraMessaggio("Grazie di aver giocato!");
+		if (!this.partita.giocatore.giocatoreIsVivo()) {
+			this.io.mostraMessaggio("Hai esaurito i CFU...");
+			return true;
+		}
+		return this.partita.isFinita();
 	}
 
 	public static void main(String[] argc) {
-		IO io = new IOConsole();
+		try (Scanner scanner = new Scanner(System.in)) {
+			IO io = new IOConsole(scanner);
+			Labirinto labirinto = Labirinto.newBuilder().addStanzaInizialeBloccata("Atrio", "passepartout", "nord")
+					.addAttrezzo("Atrio", "bacchetta", 2).addStanzaBuia("Aula N11", "lanterna")
+					.addAttrezzo("Aula N11", "osso", 1).addStanza("Aula N10").addAttrezzo("Aula N10", "lanterna", 3)
+					.addAttrezzo("Aula N10", "passepartout", 1)
+					.addCane("Aula N10", "Fido", "un cane molto ringhioso!", "osso", new Attrezzo("mantello", 1))
+					.addStanza("Laboratorio Campus")
+					.addMago("Laboratorio Campus", "Merlino", "Un mago potentissimo!", null)
+					.addStanzaVincente("Biblioteca").addStrega("Aula N11", "Magda", "una strega molto permalosa!")
+					.addAdiacenza("Atrio", "Biblioteca", Direzione.nord)
+					.addAdiacenza("Atrio", "Aula N11", Direzione.est).addAdiacenza("Atrio", "Aula N10", Direzione.sud)
+					.addAdiacenza("Atrio", "Laboratorio Campus", Direzione.ovest)
+					.addAdiacenza("Aula N11", "Laboratorio Campus", Direzione.est)
+					.addAdiacenza("Aula N11", "Atrio", Direzione.ovest)
+					.addAdiacenza("Aula N10", "Atrio", Direzione.nord)
+					.addAdiacenza("Aula N10", "Aula N11", Direzione.est)
+					.addAdiacenza("Aula N10", "Laboratorio Campus", Direzione.ovest)
+					.addAdiacenza("Laboratorio Campus", "Atrio", Direzione.est)
+					.addAdiacenza("Laboratorio Campus", "Aula N11", Direzione.ovest)
+					.addAdiacenza("Biblioteca", "Atrio", Direzione.sud).getLabirinto();
 
-		Labirinto labirinto = new LabirintoBuilder().addStanza("N10").addStanza("Biblioteca").addStanza("Corridoio")
-				.addStanzaBuia("Cantina", "lanterna").addStanzaBloccata("Corridoio", "nord", "chiave")
-				.addStanzaMagica("LabMagico", 2).addStanzaIniziale("N10").addStanzaVincente("Biblioteca")
-				.addAttrezzo("Osso", 5, "N10").addAttrezzo("Chiave", 1, "Corridoio")
-				.addPersonaggio(new Mago("Merlino", "Benvenuto!", new Attrezzo("bacchetta", 3)), "N10")
-				.addPersonaggio(new Cane("Fido", "Bau!"), "Biblioteca")
-				.addPersonaggio(new Strega("Sabrina", "Attenta!"), "Cantina").addAdiacenza("N10", "Biblioteca", "nord")
-				.addAdiacenza("Biblioteca", "N10", "sud").addAdiacenza("N10", "Corridoio", "est").getLabirinto();
-
-		labirinto.getStanzaIniziale().setPersonaggio(new Cane("Fido", "Sono un cane molto simpatico!"));
-
-		DiaDia gioco = new DiaDia(labirinto, io);
-		gioco.gioca();
+			DiaDia gioco = new DiaDia(labirinto, io);
+			gioco.gioca();
+		}
 	}
-
 }

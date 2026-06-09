@@ -1,27 +1,32 @@
 package it.uniroma3.diadia.ambienti;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class StanzaBuiaTest {
 
-	@Test
-	public void testSenzaAttrezzoLuce() {
-		StanzaBuia stanza = new StanzaBuia("stanza-test", "lanterna");
-		stanza.addAttrezzo(new Attrezzo("bastone", 2));
+	StanzaBuia stanzaBuia;
+	String attLucente;
 
-		assertEquals(stanza.getDescrizione(), "Qui c'è buio pesto!");
+	@Before
+	public void setUp() {
+		stanzaBuia = new StanzaBuia("sala", "luce");
 	}
 
 	@Test
-	public void testConAttrezzoLuce() {
-		StanzaBuia stanza = new StanzaBuia("stanza-test", "lanterna");
-		stanza.addAttrezzo(new Attrezzo("lanterna", 1));
-
-		assertEquals(stanza.getDescrizione(), "stanza-test\nUscite: \nAttrezzi nella stanza: lanterna (1kg) ");
+	public void testNoLuce() {
+		assertEquals("qui c'è buio pesto", stanzaBuia.toString());
 	}
 
+	@Test
+	public void testSiLuce() {
+		Attrezzo luce = new Attrezzo("luce", 1);
+		stanzaBuia.addAttrezzo(luce);
+		assertNotEquals("qui c'è buio pesto", stanzaBuia.toString());
+	}
 }

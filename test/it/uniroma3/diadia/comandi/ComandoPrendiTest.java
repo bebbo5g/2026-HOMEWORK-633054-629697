@@ -1,69 +1,82 @@
 package it.uniroma3.diadia.comandi;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 
-import it.uniroma3.diadia.IOSimulator;
+import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
-import it.uniroma3.diadia.ambienti.Labirinto;
-import it.uniroma3.diadia.ambienti.LabirintoBuilder;
+import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class ComandoPrendiTest {
 
-	private Partita creaPartita() {
-		Labirinto labirinto = new LabirintoBuilder().addStanzaIniziale("Atrio").addStanzaVincente("Biblioteca")
-				.addAdiacenza("Atrio", "Biblioteca", "nord").getLabirinto();
-		return new Partita(labirinto);
+	Partita partita;
+	ComandoPrendi comandoPrendi;
+	IO io;
+
+	@Before
+	public void setUp() {
+		partita = new Partita();
+		comandoPrendi = new ComandoPrendi();
+		io = new IO() {
+			@Override
+			public void mostraMessaggio(String msg) {
+			}
+
+			@Override
+			public String leggiRiga() {
+				return null;
+			}
+		};
 	}
 
 	@Test
-	public void testGetNome() {
-		ComandoPrendi cmd = new ComandoPrendi("fake", null);
-
-		assertEquals(cmd.getNome(), "prendi");
+	public void testNull1() {
+		Attrezzo pala = new Attrezzo("pala", 1);
+		Stanza s1 = new Stanza("stanza1");
+		s1.addAttrezzo(pala);
+		comandoPrendi.setParametro(null);
+		comandoPrendi.esegui(partita, io);
+		assertTrue(partita.giocatore.borsa.isEmpty());
 	}
 
 	@Test
-	public void testGetParametro() {
-		ComandoPrendi cmd = new ComandoPrendi("attrezzo", null);
-
-		assertEquals(cmd.getParametro(), "attrezzo");
+	public void testNull2() {
+		Attrezzo pala = new Attrezzo("pala", 1);
+		Stanza s1 = new Stanza("stanza1");
+		s1.addAttrezzo(pala);
+		comandoPrendi.setParametro("palla");
+		comandoPrendi.esegui(partita, io);
+		assertTrue(partita.giocatore.borsa.isEmpty());
 	}
 
 	@Test
-	public void testEsegui_attrezzoRimossoDallaStanza() {
-		IOSimulator io = new IOSimulator();
-		ComandoPrendi cmd = new ComandoPrendi("palla", io);
-		Partita partita = creaPartita();
-		partita.getStanzaCorrente().addAttrezzo(new Attrezzo("palla", 4));
-		cmd.esegui(partita);
-		assertFalse(partita.getStanzaCorrente().hasAttrezzo("palla"));
+	public void testNoNull() {
+		Attrezzo pala = new Attrezzo("pala", 1);
+		Stanza s1 = new Stanza("stanza1");
+		s1.addAttrezzo(pala);
+		partita.lab.setStanzaCorrente(s1);
+		comandoPrendi.setParametro("pala");
+		comandoPrendi.esegui(partita, io);
+		assertFalse(partita.giocatore.borsa.isEmpty());
 	}
 
 	@Test
-	public void testEsegui_attrezzoAssenteInStanza() {
-		IOSimulator io = new IOSimulator();
-		ComandoPrendi cmd = new ComandoPrendi("spada", io);
-		Partita partita = creaPartita();
-		cmd.esegui(partita);
-		assertFalse(partita.getGiocatore().getBorsa().hasAttrezzo("spada"));
-	}
-
-	@Test
-	public void testEsegui_parametroNull() {
-		IOSimulator io = new IOSimulator();
-		ComandoPrendi cmd = new ComandoPrendi(null, io);
-		Partita partita = creaPartita();
-		cmd.esegui(partita);
-		assertTrue(partita.getGiocatore().getBorsa().isEmpty());
-	}
-
-	@Test
-	public void testEstendeAbstractComando() {
-		assertTrue(new ComandoPrendi("x", null) instanceof AbstractComando);
+	public void testTroppoPeso() {
+		Attrezzo pala = new Attrezzo("pala", 8);
+		Attrezzo osso = new Attrezzo("osso", 3);
+		Stanza s1 = new Stanza("stanza1");
+		s1.addAttrezzo(pala);
+		s1.addAttrezzo(osso);
+		partita.lab.setStanzaCorrente(s1);
+		comandoPrendi.setParametro("pala");
+		comandoPrendi.esegui(partita, io);
+		comandoPrendi.setParametro("osso");
+		comandoPrendi.esegui(partita, io);
+		assertEquals(1, partita.giocatore.borsa.getNumeroAttrezzi());
 	}
 }

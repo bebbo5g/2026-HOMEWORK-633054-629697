@@ -4,23 +4,15 @@ import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 
 public class ComandoAiuto extends AbstractComando {
-	final private String nome = "aiuto";
 
-	public ComandoAiuto(IO io) {
-		super(io);
-	}
+	static final private String[] elencoComandi = { "vai", "aiuto", "fine", "prendi", "posa", "guarda", "inventario",
+			"regala", "interagisci", "saluta" };
 
 	@Override
-	public String getNome() {
-		return this.nome;
-	}
-
-	@Override
-	public void esegui(Partita partita) {
+	public void esegui(Partita partita, IO io) {
 		StringBuilder sb = new StringBuilder();
-		for (String cmd : AbstractComando.getNomiComandi())
+		for (String cmd : elencoComandi)
 			sb.append(cmd).append(" ");
-		this.io.mostraMessaggio(sb.toString().trim());
+		io.mostraMessaggio(sb.toString());
 	}
-
 }

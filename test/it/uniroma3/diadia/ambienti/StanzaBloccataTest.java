@@ -10,19 +10,24 @@ public class StanzaBloccataTest {
 
 	@Test
 	public void testSenzaAttrezzoSblocca() {
-		StanzaBloccata stanza = new StanzaBloccata("test-room", "sud", "chiave");
+		// Ordine corretto: nome stanza, attrezzo sbloccante, direzione bloccata
+		StanzaBloccata stanza = new StanzaBloccata("test-room", "chiave", "sud");
 		stanza.addAttrezzo(new Attrezzo("spada", 5));
-		stanza.impostaStanzaAdiacente("sud", new Stanza("sgabuzzino"));
 
-		assertEquals(stanza.getStanzaAdiacente("sud").getNome(), "test-room");
+		// Bisogna passare un tipo Direzione invece di una Stringa
+		stanza.impostaStanzaAdiacente(Direzione.valueOf("sud"), new Stanza("sgabuzzino"));
+
+		// Il test verifica che, non avendo la chiave, si rimanga nella test-room
+		assertEquals("test-room", stanza.getStanzaAdiacente(Direzione.valueOf("sud")).getNome());
 	}
 
 	@Test
 	public void testConAttrezzoSblocca() {
-		StanzaBloccata stanza = new StanzaBloccata("test-room", "sud", "chiave");
+		StanzaBloccata stanza = new StanzaBloccata("test-room", "chiave", "sud");
 		stanza.addAttrezzo(new Attrezzo("chiave", 1));
-		stanza.impostaStanzaAdiacente("sud", new Stanza("sgabuzzino"));
+		stanza.impostaStanzaAdiacente(Direzione.valueOf("sud"), new Stanza("sgabuzzino"));
 
-		assertEquals(stanza.getStanzaAdiacente("sud").getNome(), "sgabuzzino");
+		// Il test verifica che, avendo la chiave, si acceda allo sgabuzzino
+		assertEquals("sgabuzzino", stanza.getStanzaAdiacente(Direzione.valueOf("sud")).getNome());
 	}
 }

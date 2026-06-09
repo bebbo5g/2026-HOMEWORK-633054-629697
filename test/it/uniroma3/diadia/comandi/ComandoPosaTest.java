@@ -1,84 +1,77 @@
 package it.uniroma3.diadia.comandi;
 
-import static org.junit.Assert.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-import it.uniroma3.diadia.IOSimulator;
+import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
-import it.uniroma3.diadia.ambienti.Labirinto;
-import it.uniroma3.diadia.ambienti.LabirintoBuilder;
+import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class ComandoPosaTest {
-	private Partita creaPartita() {
-		Labirinto labirinto = new LabirintoBuilder().addStanzaIniziale("Atrio").addStanzaVincente("Biblioteca")
-				.addAdiacenza("Atrio", "Biblioteca", "nord").getLabirinto();
-		return new Partita(labirinto);
+
+	Partita partita;
+	IO io;
+	ComandoPosa comandoPosa;
+
+	@Before
+	public void setUp() {
+		partita = new Partita();
+		comandoPosa = new ComandoPosa();
+		io = new IO() {
+			@Override
+			public void mostraMessaggio(String msg) {
+			}
+
+			@Override
+			public String leggiRiga() {
+				return null;
+			}
+		};
 	}
 
 	@Test
-	public void testGetNome() {
-		ComandoPosa cmd = new ComandoPosa("fake", null);
-		assertEquals("posa", cmd.getNome());
+	public void testNienteInBorsa() {
+		Stanza s1 = new Stanza("stanza");
+		partita.lab.setStanzaCorrente(s1);
+		comandoPosa.setParametro("pala");
+		comandoPosa.esegui(partita, io);
+		assertEquals(null, partita.lab.getStanzaCorrente().getAttrezzo("pala"));
 	}
 
 	@Test
-	public void testGetParametro() {
-		ComandoPosa cmd = new ComandoPosa("attrezzo", null);
-		assertEquals("attrezzo", cmd.getParametro());
+	public void testParNull() {
+		Stanza s1 = new Stanza("stanza");
+		Attrezzo pala = new Attrezzo("pala", 1);
+		partita.giocatore.borsa.addAttrezzo(pala);
+		partita.lab.setStanzaCorrente(s1);
+		comandoPosa.setParametro(null);
+		comandoPosa.esegui(partita, io);
+		assertEquals(0, partita.lab.getStanzaCorrente().attrezzi.size());
 	}
 
 	@Test
-	public void testEsegui_attrezzoRimossoDallaBorsa() {
-		IOSimulator io = new IOSimulator();
-		ComandoPosa cmd = new ComandoPosa("palla", io);
-		Partita partita = creaPartita();
-		partita.getGiocatore().getBorsa().addAttrezzo(new Attrezzo("palla", 4));
-		cmd.esegui(partita);
-		assertNull(partita.getGiocatore().getBorsa().getAttrezzo("palla"));
+	public void testNonCe() {
+		Stanza s1 = new Stanza("stanza");
+		Attrezzo pala = new Attrezzo("pala", 1);
+		partita.giocatore.borsa.addAttrezzo(pala);
+		partita.lab.setStanzaCorrente(s1);
+		comandoPosa.setParametro("palla");
+		comandoPosa.esegui(partita, io);
+		assertEquals(0, partita.lab.getStanzaCorrente().attrezzi.size());
 	}
 
 	@Test
-	public void testEsegui_attrezzoAggiунtoInStanza() {
-		IOSimulator io = new IOSimulator();
-		ComandoPosa cmd = new ComandoPosa("palla", io);
-		Partita partita = creaPartita();
-		partita.getGiocatore().getBorsa().addAttrezzo(new Attrezzo("palla", 4));
-		cmd.esegui(partita);
-		assertTrue(partita.getStanzaCorrente().hasAttrezzo("palla"));
-	}
-
-	@Test
-	public void testEsegui_attrezzoAssenteInBorsa() {
-		IOSimulator io = new IOSimulator();
-		ComandoPosa cmd = new ComandoPosa("spada", io);
-		Partita partita = creaPartita();
-		// borsa vuota — niente da posare
-		cmd.esegui(partita);
-		assertFalse(partita.getStanzaCorrente().hasAttrezzo("spada"));
-	}
-
-	@Test
-	public void testEsegui_borsaVuotaDopoSingolaRosa() {
-		IOSimulator io = new IOSimulator();
-		ComandoPosa cmd = new ComandoPosa("palla", io);
-		Partita partita = creaPartita();
-		partita.getGiocatore().getBorsa().addAttrezzo(new Attrezzo("palla", 4));
-		cmd.esegui(partita);
-		assertTrue(partita.getGiocatore().getBorsa().isEmpty());
-	}
-
-	@Test
-	public void testEsegui_parametroNull_nonCambiaStanza() {
-		IOSimulator io = new IOSimulator();
-		ComandoPosa cmd = new ComandoPosa(null, io);
-		Partita partita = creaPartita();
-		partita.getGiocatore().getBorsa().addAttrezzo(new Attrezzo("palla", 4));
-		cmd.esegui(partita);
-		assertFalse(partita.getStanzaCorrente().hasAttrezzo("palla"));
+	public void testCe() {
+		Stanza s1 = new Stanza("stanza");
+		Attrezzo pala = new Attrezzo("pala", 1);
+		partita.giocatore.borsa.addAttrezzo(pala);
+		partita.lab.setStanzaCorrente(s1);
+		comandoPosa.setParametro("pala");
+		comandoPosa.esegui(partita, io);
+		assertTrue(partita.lab.getStanzaCorrente().hasAttrezzo("pala"));
 	}
 }

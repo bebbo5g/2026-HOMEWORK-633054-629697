@@ -1,79 +1,82 @@
 package it.uniroma3.diadia.comandi;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class FabbricaDiComandiFisarmonicaTest {
-	FabbricaDiComandiFisarmonica fabbrica;
+
+	private FabbricaDiComandiFisarmonica fabbrica;
 
 	@BeforeEach
-	void setUp() {
-		this.fabbrica = new FabbricaDiComandiFisarmonica(null);
+	public void setUp() {
+		this.fabbrica = new FabbricaDiComandiFisarmonica();
 	}
 
 	@Test
 	public void testEmptyCmd() {
 		Comando cmd = this.fabbrica.costruisciComando("");
 
-		assertEquals(cmd.getNome(), "non-valido");
-		assertEquals(cmd.getParametro(), "<empty>");
+		assertEquals(ComandoNonValido.class, cmd.getClass());
+		// Effettuiamo il cast ad AbstractComando per poter chiamare getParametro()
+		assertNull(((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testAiuto() {
 		Comando cmd = this.fabbrica.costruisciComando("aiuto");
 
-		assertEquals(cmd.getNome(), "aiuto");
-		assertEquals(cmd.getParametro(), null);
+		assertEquals(ComandoAiuto.class, cmd.getClass());
+		assertNull(((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testFine() {
 		Comando cmd = this.fabbrica.costruisciComando("fine");
 
-		assertEquals(cmd.getNome(), "fine");
-		assertEquals(cmd.getParametro(), null);
+		assertEquals(ComandoFine.class, cmd.getClass());
+		assertNull(((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testGuarda() {
 		Comando cmd = this.fabbrica.costruisciComando("guarda");
 
-		assertEquals(cmd.getNome(), "guarda");
-		assertEquals(cmd.getParametro(), null);
+		assertEquals(ComandoGuarda.class, cmd.getClass());
+		assertNull(((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testPosa() {
 		Comando cmd = this.fabbrica.costruisciComando("posa palla");
 
-		assertEquals(cmd.getNome(), "posa");
-		assertEquals(cmd.getParametro(), "palla");
+		assertEquals(ComandoPosa.class, cmd.getClass());
+		assertEquals("palla", ((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testPrendi() {
 		Comando cmd = this.fabbrica.costruisciComando("prendi bastone");
 
-		assertEquals(cmd.getNome(), "prendi");
-		assertEquals(cmd.getParametro(), "bastone");
+		assertEquals(ComandoPrendi.class, cmd.getClass());
+		assertEquals("bastone", ((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testVai() {
 		Comando cmd = this.fabbrica.costruisciComando("vai sud");
 
-		assertEquals(cmd.getNome(), "vai");
-		assertEquals(cmd.getParametro(), "sud");
+		assertEquals(ComandoVai.class, cmd.getClass());
+		assertEquals("sud", ((AbstractComando) cmd).getParametro());
 	}
 
 	@Test
 	public void testComandoNonValido() {
 		Comando cmd = this.fabbrica.costruisciComando("my-cmd");
 
-		assertEquals(cmd.getNome(), "non-valido");
-		assertEquals(cmd.getParametro(), "my-cmd");
+		assertEquals(ComandoNonValido.class, cmd.getClass());
+		assertNull(((AbstractComando) cmd).getParametro());
 	}
 }

@@ -5,27 +5,33 @@ import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Cane extends AbstractPersonaggio {
 
-	private static final String MESSAGGIO_MORSO = "Bau! Il cane ti morde! Perdi un CFU!";
-	private static final int CFU_PERSI = 1;
+	private String ciboPreferito;
+	private Attrezzo attrezzoInBocca;
 
-	public Cane(String nome, String presentazione) {
+	public Cane(String nome, String presentazione, String ciboPreferito, Attrezzo attrezzoInBocca) {
 		super(nome, presentazione);
+		this.ciboPreferito = ciboPreferito;
+		this.attrezzoInBocca = attrezzoInBocca;
 	}
 
 	@Override
 	public String agisci(Partita partita) {
-		int cfuAttuali = partita.getGiocatore().getCfu();
-		partita.getGiocatore().setCfu(cfuAttuali - CFU_PERSI);
-		return MESSAGGIO_MORSO;
+		partita.giocatore.setCfu(partita.giocatore.getCfu() - 1);
+		return "Il cane ti ha morso! Hai perso un CFU!";
 	}
 
 	@Override
 	public String riceviRegalo(Attrezzo attrezzo, Partita partita) {
-		if (attrezzo.getNome().equals("osso")) {
-			partita.getStanzaCorrente().addAttrezzo(new Attrezzo("osso rosicchiato", 1));
-			return "Woof! Grazie per l'osso! *scodinzola*";
+		if (attrezzo.getNome().equals(this.ciboPreferito)) {
+			if (this.attrezzoInBocca != null) {
+				partita.lab.getStanzaCorrente().addAttrezzo(this.attrezzoInBocca);
+				this.attrezzoInBocca = null;
+			}
+			return "Il cane ha accettato " + attrezzo.getNome() + " e ha lasciato cadere un attrezzo!";
 		}
-		partita.getGiocatore().setCfu(partita.getGiocatore().getCfu() - 1);
-		return "Bau! Questo non mi piace! *morde* Perdi 1 CFU!";
+		// regalo rifiutato: restituisce l'attrezzo alla borsa del giocatore
+		partita.giocatore.borsa.addAttrezzo(attrezzo);
+		partita.giocatore.setCfu(partita.giocatore.getCfu() - 1);
+		return "Il cane non vuole " + attrezzo.getNome() + " e ti ha morso! Hai perso un CFU!";
 	}
 }

@@ -3,52 +3,25 @@ package it.uniroma3.diadia.comandi;
 import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
-import it.uniroma3.diadia.giocatore.Borsa;
 
 public class ComandoPosa extends AbstractComando {
-	final private String nome = "posa";
-	final private String nomeAttrezzo;
-
-	public ComandoPosa(String nomeAttrezzo, IO io) {
-		super(io);
-		this.nomeAttrezzo = nomeAttrezzo;
-	}
 
 	@Override
-	public String getNome() {
-		return this.nome;
-	}
-
-	@Override
-	public String getParametro() {
-		return this.nomeAttrezzo;
-	}
-
-	@Override
-	public void esegui(Partita partita) {
-		if (this.nomeAttrezzo == null) {
-			this.io.mostraMessaggio("Non hai scritto nulla!");
+	public void esegui(Partita partita, IO io) {
+		if (partita.giocatore.borsa.isEmpty()) {
+			io.mostraMessaggio("La tua borsa è vuota non hai nulla da posare!");
 			return;
 		}
-
-		Borsa borsa = partita.getGiocatore().borsa;
-
-		if (!borsa.hasAttrezzo(this.nomeAttrezzo)) {
-			this.io.mostraMessaggio("L'attrezzo " + this.nomeAttrezzo + " non è presente in borsa!");
+		if (this.getParametro() == null) {
+			io.mostraMessaggio("Cosa vorresti posare?");
 			return;
 		}
-
-		Attrezzo attrezzo = borsa.getAttrezzo(this.nomeAttrezzo);
-
-		if (partita.getStanzaCorrente().addAttrezzo(attrezzo)) {
-			borsa.removeAttrezzo(attrezzo);
-			this.io.mostraMessaggio(
-					"Attrezzo " + attrezzo.getNome() + " posato in stanza: " + partita.getStanzaCorrente().getNome());
-			this.io.mostraMessaggio("Peso attuale borsa: " + borsa.getPeso() + "kg/" + borsa.getPesoMax() + "kg");
-		} else {
-			this.io.mostraMessaggio("Stanza piena di attrezzi, IMPOSSIBILE POSARE!");
+		if (!partita.giocatore.borsa.hasAttrezzo(this.getParametro())) {
+			io.mostraMessaggio("Non possiedi " + this.getParametro());
+			return;
 		}
-
+		Attrezzo attrezzoDaPosare = partita.giocatore.borsa.removeAttrezzo(this.getParametro());
+		partita.lab.getStanzaCorrente().addAttrezzo(attrezzoDaPosare);
+		io.mostraMessaggio("Hai posato " + this.getParametro() + " in " + partita.lab.getStanzaCorrente().getNome());
 	}
-
 }

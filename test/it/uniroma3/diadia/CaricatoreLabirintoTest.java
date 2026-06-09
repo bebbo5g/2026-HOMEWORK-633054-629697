@@ -9,6 +9,9 @@ import java.io.StringReader;
 
 import org.junit.jupiter.api.Test;
 
+import it.uniroma3.diadia.ambienti.CaricatoreLabirinto;
+import it.uniroma3.diadia.ambienti.Direzione;
+import it.uniroma3.diadia.ambienti.FormatoLabirintoException;
 import it.uniroma3.diadia.ambienti.Labirinto;
 import it.uniroma3.diadia.personaggi.Cane;
 
@@ -30,7 +33,7 @@ class CaricatoreLabirintoTest {
 	@Test
 	public void testMonolocale_stanzaFinale() throws Exception {
 		Labirinto l = carica("Stanze:\nN10\nEstremi:\nN10\nN10\nAttrezzi:\nUscite:\n");
-		assertEquals("N10", l.getStanzaFinale().getNome());
+		assertEquals("N10", l.getStanzaVincente().getNome()); // Usato getStanzaVincente
 	}
 
 	// ── bilocale ─────────────────────────────────────────────
@@ -46,14 +49,16 @@ class CaricatoreLabirintoTest {
 	public void testBilocale_stanzaFinale() throws Exception {
 		Labirinto l = carica(
 				"Stanze:\nN10\nBiblioteca\nEstremi:\nN10\nBiblioteca\nAttrezzi:\nUscite:\nN10 nord Biblioteca\n");
-		assertEquals("Biblioteca", l.getStanzaFinale().getNome());
+		assertEquals("Biblioteca", l.getStanzaVincente().getNome()); // Usato getStanzaVincente
 	}
 
 	@Test
 	public void testBilocale_adiacenza() throws Exception {
 		Labirinto l = carica(
 				"Stanze:\nN10\nBiblioteca\nEstremi:\nN10\nBiblioteca\nAttrezzi:\nUscite:\nN10 nord Biblioteca\n");
-		assertEquals("Biblioteca", l.getStanzaIniziale().getStanzaAdiacente("nord").getNome());
+		assertEquals("Biblioteca", l.getStanzaIniziale().getStanzaAdiacente(Direzione.valueOf("nord")).getNome()); // Usato
+																													// Enum
+																													// Direzione
 	}
 
 	// ── attrezzi ─────────────────────────────────────────────
@@ -73,21 +78,23 @@ class CaricatoreLabirintoTest {
 	// ── errori ───────────────────────────────────────────────
 
 	@Test
-	public void testStanzaInizialeNonDefinita() {
-		assertThrows(FormatoFileNonValidoException.class,
-				() -> carica("Stanze:\nN10\nEstremi:\nAtrio\nN10\nAttrezzi:\nUscite:\n"));
+	public void testSezioneMancante() {
+		// Il file non inizia con l'intestazione di una sezione (es. "Stanze:")
+		assertThrows(FormatoLabirintoException.class, () -> carica("N10\nEstremi:\nAtrio\nN10\nAttrezzi:\nUscite:\n"));
 	}
 
 	@Test
 	public void testPesoNonNumerico() {
-		assertThrows(FormatoFileNonValidoException.class,
+		assertThrows(FormatoLabirintoException.class,
 				() -> carica("Stanze:\nN10\nEstremi:\nN10\nN10\nAttrezzi:\nOsso pesante N10\nUscite:\n"));
 	}
 
 	@Test
-	public void testStanzaDestinazioneNonDefinita() {
-		assertThrows(FormatoFileNonValidoException.class,
-				() -> carica("Stanze:\nN10\nEstremi:\nN10\nN10\nAttrezzi:\nUscite:\nN10 nord Fantasma\n"));
+	public void testDirezioneUscitaNonValida() {
+		// Passiamo una direzione inventata ("su") per innescare
+		// l'IllegalArgumentException
+		assertThrows(FormatoLabirintoException.class,
+				() -> carica("Stanze:\nN10\nEstremi:\nN10\nN10\nAttrezzi:\nUscite:\nN10 su Fantasma\n"));
 	}
 
 	// ── trilocale ────────────────────────────────────────────
@@ -96,22 +103,25 @@ class CaricatoreLabirintoTest {
 	public void testTrilocale_adiacenzeMultiple() throws Exception {
 		Labirinto l = carica("Stanze:\nN10\nBiblioteca\nN11\nEstremi:\nN10\nBiblioteca\n"
 				+ "Attrezzi:\nUscite:\nN10 nord Biblioteca\nN10 est N11\nN11 ovest N10\n");
-		assertEquals("Biblioteca", l.getStanzaIniziale().getStanzaAdiacente("nord").getNome());
-		assertEquals("N11", l.getStanzaIniziale().getStanzaAdiacente("est").getNome());
+		assertEquals("Biblioteca", l.getStanzaIniziale().getStanzaAdiacente(Direzione.valueOf("nord")).getNome());
+		assertEquals("N11", l.getStanzaIniziale().getStanzaAdiacente(Direzione.valueOf("est")).getNome());
 	}
 
 	@Test
 	public void testStanzaBuia() throws Exception {
-		String testo = "Stanze:\nN10\n" + "Stanze buie:\nCantina lanterna\n" + "Estremi:\nN10\nN10\n" + "Attrezzi:\n"
-				+ "Uscite:\n";
+		// Adattato al nuovo formato: la stanza buia va sotto "Stanze:" col prefisso
+		// "buia"
+		String testo = "Stanze:\nbuia Cantina lanterna\nEstremi:\nCantina\nCantina\nAttrezzi:\nUscite:\n";
 		Labirinto l = carica(testo);
 		assertTrue(l.getStanzaIniziale().getDescrizione().length() > 0);
 	}
 
 	@Test
 	public void testPersonaggioMago() throws Exception {
-		String testo = "Stanze:\nN10\nBiblioteca\n" + "Estremi:\nN10\nBiblioteca\n" + "Attrezzi:\n"
-				+ "Personaggi:\nMago Merlino Ciao! bacchetta 3 N10\n" + "Uscite:\n";
+		// Adattato al formato: mago <nomeStanza> <nome> <pres> <nomeAttrezzo>
+		// <pesoAttrezzo>
+		String testo = "Stanze:\nN10\nBiblioteca\nEstremi:\nN10\nBiblioteca\nAttrezzi:\n"
+				+ "Personaggi:\nmago N10 Merlino Ciao! bacchetta 3\nUscite:\n";
 		Labirinto l = carica(testo);
 		assertNotNull(l.getStanzaIniziale().getPersonaggio());
 		assertEquals("Merlino", l.getStanzaIniziale().getPersonaggio().getNome());
@@ -119,8 +129,10 @@ class CaricatoreLabirintoTest {
 
 	@Test
 	public void testPersonaggioCane() throws Exception {
-		String testo = "Stanze:\nN10\nBiblioteca\n" + "Estremi:\nN10\nBiblioteca\n" + "Attrezzi:\n"
-				+ "Personaggi:\nCane Fido Bau! N10\n" + "Uscite:\n";
+		// Adattato al formato: cane <nomeStanza> <nome> <pres> <cibo> <nomeAttrezzo>
+		// <pesoAttrezzo>
+		String testo = "Stanze:\nN10\nBiblioteca\nEstremi:\nN10\nBiblioteca\nAttrezzi:\n"
+				+ "Personaggi:\ncane N10 Fido Bau! osso collare 2\nUscite:\n";
 		Labirinto l = carica(testo);
 		assertNotNull(l.getStanzaIniziale().getPersonaggio());
 		assertTrue(l.getStanzaIniziale().getPersonaggio() instanceof Cane);
@@ -128,9 +140,10 @@ class CaricatoreLabirintoTest {
 
 	@Test
 	public void testTipoPersonaggioSconosciuto() {
-		String testo = "Stanze:\nN10\n" + "Estremi:\nN10\nN10\n" + "Attrezzi:\n"
-				+ "Personaggi:\nDrago Smaug Ruggito! N10\n" + "Uscite:\n";
-		assertThrows(FormatoFileNonValidoException.class, () -> carica(testo));
+		// Cambiata l'eccezione da controllare
+		String testo = "Stanze:\nN10\nEstremi:\nN10\nN10\nAttrezzi:\n"
+				+ "Personaggi:\ndrago N10 Smaug Ruggito!\nUscite:\n";
+		assertThrows(FormatoLabirintoException.class, () -> carica(testo));
 	}
 
 }

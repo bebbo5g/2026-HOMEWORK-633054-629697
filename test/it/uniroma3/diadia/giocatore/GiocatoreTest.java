@@ -1,24 +1,33 @@
 package it.uniroma3.diadia.giocatore;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.Assert.assertEquals;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
-class GiocatoreTest {
+public class GiocatoreTest {
 
-	@Test
-	public void testCfuIniziali() {
-		Giocatore giocatore = new Giocatore();
+	Giocatore giocatore;
 
-		assertEquals(giocatore.getCfu(), 20);
+	@Before
+	public void setUp() {
+		giocatore = new Giocatore();
 	}
 
 	@Test
-	public void testSetCfu() {
-		Giocatore giocatore = new Giocatore();
+	public void testCFUiniziali() {
+		assertEquals(20, giocatore.getCfu());
+	}
 
-		giocatore.setCfu(14);
+	@Test
+	public void setCfu1() {
+		this.giocatore.setCfu(5);
+		assertEquals(5, giocatore.getCfu());
+	}
 
-		assertEquals(giocatore.getCfu(), 14);
+	@Test
+	public void setCfu2() {
+		this.giocatore.setCfu(5);
+		assertEquals("CFU rimanenti = 5", giocatore.dimmiCfu());
 	}
 }

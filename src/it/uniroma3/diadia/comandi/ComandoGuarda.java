@@ -4,22 +4,10 @@ import it.uniroma3.diadia.IO;
 import it.uniroma3.diadia.Partita;
 
 public class ComandoGuarda extends AbstractComando {
-	final private String nome = "guarda";
-
-	public ComandoGuarda(IO io) {
-		super(io);
-	}
 
 	@Override
-	public String getNome() {
-		return this.nome;
+	public void esegui(Partita partita, IO io) {
+		io.mostraMessaggio(partita.lab.getStanzaCorrente().getDescrizione());
+		io.mostraMessaggio("CFU rimanenti = " + partita.giocatore.getCfu());
 	}
-
-	@Override
-	public void esegui(Partita partita) {
-		this.io.mostraMessaggio(partita.getStanzaCorrente().getDescrizione());
-		this.io.mostraMessaggio(partita.getGiocatore().getBorsa().toString());
-		this.io.mostraMessaggio("CFU rimanenti: " + partita.getGiocatore().getCfu());
-	}
-
 }

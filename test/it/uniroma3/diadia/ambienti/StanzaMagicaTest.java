@@ -1,37 +1,54 @@
 package it.uniroma3.diadia.ambienti;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
-class StanzaMagicaTest {
+public class StanzaMagicaTest {
 
-	@Test
-	public void testMagicaNonTransforma() {
-		StanzaMagica magica = new StanzaMagica("Magica");
+	private StanzaMagica stanzaMagica;
 
-		magica.addAttrezzo(new Attrezzo("spada", 2));
-		magica.addAttrezzo(new Attrezzo("scudo", 3));
-		magica.addAttrezzo(new Attrezzo("chiave", 1));
-
-		assertTrue(magica.hasAttrezzo("spada"));
-		assertTrue(magica.hasAttrezzo("scudo"));
-		assertTrue(magica.hasAttrezzo("chiave"));
+	@Before
+	public void setUp() {
+		stanzaMagica = new StanzaMagica("magica", 2);
 	}
 
 	@Test
-	public void testMagicaTrasforma() {
-		StanzaMagica magica = new StanzaMagica("Magica");
+	public void testAddAttrezzoSottoSogliaNonModifica() {
+		stanzaMagica.addAttrezzo(new Attrezzo("chiave", 2));
+		assertTrue(stanzaMagica.hasAttrezzo("chiave"));
+	}
 
-		magica.addAttrezzo(new Attrezzo("a", 1));
-		magica.addAttrezzo(new Attrezzo("b", 1));
-		magica.addAttrezzo(new Attrezzo("c", 1));
-		magica.addAttrezzo(new Attrezzo("ossa", 2));
+	@Test
+	public void testAddAttrezzoSottoSogliaPesoInvariato() {
+		stanzaMagica.addAttrezzo(new Attrezzo("chiave", 2));
+		assertEquals(2, stanzaMagica.getAttrezzo("chiave").getPeso());
+	}
 
-		assertFalse(magica.hasAttrezzo("ossa"));
-		assertTrue(magica.hasAttrezzo("asso"));
+	@Test
+	public void testAddAttrezzoOltreSogliaInverteNome() {
+		stanzaMagica.addAttrezzo(new Attrezzo("a", 1));
+		stanzaMagica.addAttrezzo(new Attrezzo("b", 1));
+		stanzaMagica.addAttrezzo(new Attrezzo("chiave", 2));
+		assertTrue(stanzaMagica.hasAttrezzo("evaihc"));
+	}
+
+	@Test
+	public void testAddAttrezzoOltreSogliaDoppiaPeso() {
+		stanzaMagica.addAttrezzo(new Attrezzo("a", 1));
+		stanzaMagica.addAttrezzo(new Attrezzo("b", 1));
+		stanzaMagica.addAttrezzo(new Attrezzo("chiave", 2));
+		assertEquals(4, stanzaMagica.getAttrezzo("evaihc").getPeso());
+	}
+
+	@Test
+	public void testAddAttrezzoSottoSogliaNonInverteNome() {
+		stanzaMagica.addAttrezzo(new Attrezzo("chiave", 2));
+		assertFalse(stanzaMagica.hasAttrezzo("evaihc"));
 	}
 }

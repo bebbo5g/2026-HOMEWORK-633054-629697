@@ -1,12 +1,13 @@
 package it.uniroma3.diadia.personaggi;
 
+import java.util.Set;
+
 import it.uniroma3.diadia.Partita;
+import it.uniroma3.diadia.ambienti.Direzione;
 import it.uniroma3.diadia.ambienti.Stanza;
 import it.uniroma3.diadia.attrezzi.Attrezzo;
 
 public class Strega extends AbstractPersonaggio {
-	private static final String MESSAGGIO_PERMALOSA = "Non mi hai salutata! Ti mando nella stanza più povera!";
-	private static final String MESSAGGIO_GENTILE = "Sei stato gentile! Ti mando nella stanza più ricca!";
 
 	public Strega(String nome, String presentazione) {
 		super(nome, presentazione);
@@ -14,44 +15,34 @@ public class Strega extends AbstractPersonaggio {
 
 	@Override
 	public String agisci(Partita partita) {
-		Stanza corrente = partita.getStanzaCorrente();
-		Stanza destinazione;
-
-		if (!this.haSalutato()) {
-			// non salutata → stanza adiacente con MENO attrezzi
-			destinazione = getStanzaConMenoAttrezzi(corrente);
-			partita.setStanzaCorrente(destinazione);
-			return MESSAGGIO_PERMALOSA;
-		} else {
-			// salutata → stanza adiacente con PIÙ attrezzi
-			destinazione = getStanzaConPiuAttrezzi(corrente);
-			partita.setStanzaCorrente(destinazione);
-			return MESSAGGIO_GENTILE;
+		Stanza stanzaCorrente = partita.lab.getStanzaCorrente();
+		Set<Direzione> direzioni = stanzaCorrente.getDirezioni();
+		Stanza destinazione = null;
+		int attrezziDestinazione = -1;
+		for (Direzione dir : direzioni) {
+			Stanza adiacente = stanzaCorrente.getStanzaAdiacente(dir);
+			int numAttrezzi = adiacente.getAttrezzi().size();
+			if (!this.haSalutato()) {
+				if (destinazione == null || numAttrezzi < attrezziDestinazione) {
+					destinazione = adiacente;
+					attrezziDestinazione = numAttrezzi;
+				}
+			} else {
+				if (destinazione == null || numAttrezzi > attrezziDestinazione) {
+					destinazione = adiacente;
+					attrezziDestinazione = numAttrezzi;
+				}
+			}
 		}
-	}
-
-	private Stanza getStanzaConMenoAttrezzi(Stanza corrente) {
-		Stanza minima = null;
-		for (String dir : corrente.getDirezioni()) {
-			Stanza adiacente = corrente.getStanzaAdiacente(dir);
-			if (minima == null || adiacente.getNumeroAttrezzi() < minima.getNumeroAttrezzi())
-				minima = adiacente;
+		if (destinazione != null) {
+			partita.lab.setStanzaCorrente(destinazione);
+			return "La strega ti ha trasportato in " + destinazione.getNome() + "!";
 		}
-		return minima != null ? minima : corrente;
-	}
-
-	private Stanza getStanzaConPiuAttrezzi(Stanza corrente) {
-		Stanza massima = null;
-		for (String dir : corrente.getDirezioni()) {
-			Stanza adiacente = corrente.getStanzaAdiacente(dir);
-			if (massima == null || adiacente.getNumeroAttrezzi() > massima.getNumeroAttrezzi())
-				massima = adiacente;
-		}
-		return massima != null ? massima : corrente;
+		return "La strega non sa dove mandarti!";
 	}
 
 	@Override
 	public String riceviRegalo(Attrezzo attrezzo, Partita partita) {
-		return "Ah ah ah! Che bel regalino... lo tengo io! *ride fragorosamente*";
+		return "La strega trattiene " + attrezzo.getNome() + " scoppiando a ridere!";
 	}
 }

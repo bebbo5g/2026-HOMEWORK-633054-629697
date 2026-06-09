@@ -6,53 +6,62 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
-import it.uniroma3.diadia.IOSimulator;
-
 public class AbstractComandoTest {
 
 	@Test
 	public void testAiuto_getParametroNull() {
-		assertNull(new ComandoAiuto(new IOSimulator()).getParametro());
+		ComandoAiuto comando = new ComandoAiuto();
+		assertNull(comando.getParametro());
 	}
 
 	@Test
 	public void testFine_getParametroNull() {
-		assertNull(new ComandoFine(new IOSimulator()).getParametro());
+		ComandoFine comando = new ComandoFine();
+		assertNull(comando.getParametro());
 	}
 
 	@Test
 	public void testGuarda_getParametroNull() {
-		assertNull(new ComandoGuarda(new IOSimulator()).getParametro());
+		ComandoGuarda comando = new ComandoGuarda();
+		assertNull(comando.getParametro());
 	}
 
 	@Test
 	public void testVai_getParametro() {
-		assertEquals("nord", new ComandoVai("nord", new IOSimulator()).getParametro());
+		ComandoVai comando = new ComandoVai();
+		comando.setParametro("nord");
+		assertEquals("nord", comando.getParametro());
 	}
 
 	@Test
 	public void testPrendi_getParametro() {
-		assertEquals("osso", new ComandoPrendi("osso", new IOSimulator()).getParametro());
+		ComandoPrendi comando = new ComandoPrendi();
+		comando.setParametro("osso");
+		assertEquals("osso", comando.getParametro());
 	}
 
 	@Test
 	public void testPosa_getParametro() {
-		assertEquals("palla", new ComandoPosa("palla", new IOSimulator()).getParametro());
+		ComandoPosa comando = new ComandoPosa();
+		comando.setParametro("palla");
+		assertEquals("palla", comando.getParametro());
 	}
 
 	@Test
 	public void testNonValido_getParametro() {
-		assertEquals("vola", new ComandoNonValido("vola", new IOSimulator()).getParametro());
+		ComandoNonValido comando = new ComandoNonValido();
+		comando.setParametro("vola");
+		assertEquals("vola", comando.getParametro());
 	}
 
 	@Test
 	public void testTuttiEstendonoAbstractComando() {
-		assertTrue(new ComandoAiuto(new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoFine(new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoGuarda(new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoVai("nord", new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoPrendi("x", new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoPosa("x", new IOSimulator()) instanceof AbstractComando);
-		assertTrue(new ComandoNonValido("x", new IOSimulator()) instanceof AbstractComando);
+		assertTrue(new ComandoAiuto() instanceof AbstractComando);
+		assertTrue(new ComandoFine() instanceof AbstractComando);
+		assertTrue(new ComandoGuarda() instanceof AbstractComando);
+		assertTrue(new ComandoVai() instanceof AbstractComando);
+		assertTrue(new ComandoPrendi() instanceof AbstractComando);
+		assertTrue(new ComandoPosa() instanceof AbstractComando);
+		assertTrue(new ComandoNonValido() instanceof AbstractComando);
 	}
 }
